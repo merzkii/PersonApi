@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Basics;
 
 namespace Core.Models
 {
-    public class City
+    public class City : BaseEntity
     {
-        int Id { get; set; }
         string Name { get; set; }
     }
 }

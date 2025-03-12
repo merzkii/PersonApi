@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Core.Basics;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class SharedPhone
+    public class SharedPhone : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public int PhoneId { get; set; }
 
