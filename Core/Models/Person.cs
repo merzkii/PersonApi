@@ -1,6 +1,4 @@
 ﻿using Core.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using Core.Basics;
 
 namespace Core.Models

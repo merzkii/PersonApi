@@ -4,6 +4,7 @@ namespace Core.Models
 {
     public class City : BaseEntity
     {
-        string Name { get; set; }
+        public string Name { get; set; }
+        public List<Person> Persons { get; set; }
     }
 }

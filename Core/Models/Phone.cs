@@ -1,6 +1,5 @@
 ﻿using Core.Basics;
 using Core.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace Core.Models
 {
@@ -8,7 +7,7 @@ namespace Core.Models
     {
 
         public PhoneType Type { get; set; }
-        public string Number { get; set; } = string.Empty;
+        public string Number { get; set; } 
         public ICollection<SharedPhone> SharedPhone { get; set; }
     }
 }
