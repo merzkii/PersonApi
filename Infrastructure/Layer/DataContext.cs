@@ -14,6 +14,7 @@ namespace Infrastructure.Layer
         public DbSet<Phone> Phones { get; set; }
         public DbSet<ConnectedPerson> ConnectedPersons { get; set; }
         public DbSet<SharedPhone> SharedPhones { get; set; }
+        public DbSet<City> Cities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
