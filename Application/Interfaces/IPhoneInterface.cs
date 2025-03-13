@@ -9,6 +9,6 @@ namespace Application.Interfaces
         Task<int> CreatePhones(PhoneDTO id);
         Task<Phone> GetPhone(int id);
         Task<Phone> DeletePhone(int id);
-        Task<int> UpdatePhone(UpdatePhoneDTO phone);
+        Task<int> UpdatePhone(UpdatePhoneDTO phone);    
     }
 }

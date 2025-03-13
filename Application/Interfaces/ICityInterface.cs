@@ -3,7 +3,7 @@ using Core.Models;
 
 namespace Application.Interfaces
 {
-    interface ICityInterface
+    public interface ICityInterface
     {
         Task<ICollection<City>> GetCities();
         Task<City> GetCity(int id);
