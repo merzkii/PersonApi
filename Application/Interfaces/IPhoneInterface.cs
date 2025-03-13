@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTO_s.Phone;
+using Core.Models;
 
 namespace Application.Interfaces
 {
-    interface IPhoneInterface
+    public interface IPhoneInterface
     {
+        Task<ICollection<Phone>> GetPhones();
+        Task<int> CreatePhones(PhoneDTO id);
+        Task<Phone> GetPhone(int id);
+        Task<Phone> DeletePhone(int id);
+        Task<int> UpdatePhone(UpdatePhoneDTO phone);
     }
 }

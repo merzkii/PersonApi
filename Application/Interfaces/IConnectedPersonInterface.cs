@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTO_s.Person;
+using Core.Models;
 
 namespace Application.Interfaces
 {
-    interface IConnectedPersonInterface
+    public interface IConnectedPersonInterface
     {
+        Task<ICollection<ConnectedPerson>> GetConnectedPersons();
+        Task<int> CreateConnectedPersons(ConnectedPersonDTO id);
+        Task<ConnectedPerson> GetConnectedPerson(int id);
+        Task<ConnectedPerson> DeleteConnectedPerson(int id);
+        Task<int> UpdateConnectedPerson(UpdateConnectedPersonDTO updateconnectedPerson);
     }
 }

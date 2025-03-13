@@ -6,13 +6,9 @@ namespace Core.Models
 {
     public class Phone : BaseEntity
     {
-        [Required]
+
         public PhoneType Type { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 4)]
         public string Number { get; set; } = string.Empty;
-
         public ICollection<SharedPhone> SharedPhone { get; set; }
     }
 }

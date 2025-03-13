@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTO_s
+namespace Application.DTO_s.Person
 {
-    class PersonDTO
+    public class UpdatePersonDTO : PersonDTO
     {
-
+        public int Id { get; set; }
     }
 }

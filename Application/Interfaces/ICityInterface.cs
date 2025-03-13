@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.DTO_s.City;
+using Core.Models;
 
 namespace Application.Interfaces
 {
     interface ICityInterface
     {
+        Task<ICollection<City>> GetCities();
+        Task<City> GetCity(int id);
+        Task<int> CreateCity(CityDTO name);
+        Task<City> DeleteCity(int id);
+        Task<int> UpdateCity(UpdateCityDTO city);
     }
 }
