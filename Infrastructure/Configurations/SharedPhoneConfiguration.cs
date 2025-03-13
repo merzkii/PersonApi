@@ -13,12 +13,12 @@ namespace Infrastructure.Configurations
             builder.HasOne(sp => sp.Phone)
                    .WithMany(p => p.SharedPhone)
                    .HasForeignKey(sp => sp.PhoneId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(sp => sp.Person)
                    .WithMany(p => p.PhoneNumbers)
                    .HasForeignKey(sp => sp.PersonId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -29,24 +29,11 @@ namespace Infrastructure.Configurations
             builder.Property(p => p.DateOfBirth)
                 .IsRequired();
 
-            builder.HasOne(p => p.City)
-                .WithMany(p=>p.Persons)
-                .HasForeignKey(p => p.CityId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(p => p.ImagePath)
+                .IsRequired();
 
-            builder.HasMany(p => p.PhoneNumbers)
-                .WithOne(pn => pn.Person)
-                .HasForeignKey(pn => pn.PersonId);
 
-            builder.HasMany(p => p.RelatedIndividuals)
-                .WithOne(cp => cp.Person)
-                .HasForeignKey(cp => cp.PersonId)
-                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(p => p.RelatedIndividuals)
-                .WithOne(cp => cp.RelatedPerson)
-                .HasForeignKey(cp => cp.ConnectedPersonId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
