@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    class PhoneRepository : IPhoneInterface
+    public class PhoneRepository : IPhoneInterface
     {
         public Task<int> CreatePhones(PhoneDTO id)
         {

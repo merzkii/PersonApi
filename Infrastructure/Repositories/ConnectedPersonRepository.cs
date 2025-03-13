@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
-    class ConnectedPersonRepository : IConnectedPersonInterface
+    public class ConnectedPersonRepository : IConnectedPersonInterface
     {
         public Task<int> CreateConnectedPersons(ConnectedPersonDTO id)
         {

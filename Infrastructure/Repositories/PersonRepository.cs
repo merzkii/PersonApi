@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    class PersonRepository : IPersonInterface
+    public class PersonRepository : IPersonInterface
     {
         public Task<int> CreatePerson(PersonDTO personDTO)
         {
