@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTO_s.Person
 {
-    public class UpdateConnectedPersonDTO : ConnectedPersonDTO
+    public class UpdateConnectedPersonDTO 
     {
         public int Id { get; set; }
 

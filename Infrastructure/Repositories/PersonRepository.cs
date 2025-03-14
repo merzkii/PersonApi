@@ -38,7 +38,14 @@ namespace Infrastructure.Repositories
 
         public async Task<Person> GetPerson(int id)
         {
-            var person = await _context.Persons.SingleAsync(p => p.Id == id);
+            var person = await _context.Persons
+                .Include(p => p.City)
+                .Include(p => p.PhoneNumbers)
+                .ThenInclude(sp => sp.Phone)
+                .Include(p => p.RelatedIndividuals)
+                .ThenInclude(cp => cp.RelatedPerson)
+                .SingleOrDefaultAsync(p => p.Id == id);
+
             if (person == null)
             {
                 throw new NullReferenceException("Person not found");
