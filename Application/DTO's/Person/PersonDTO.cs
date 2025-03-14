@@ -25,6 +25,10 @@ namespace Application.DTO_s
         [Range(18, 120, ErrorMessage = "Age must be at least 18 years old.")]
         public DateTime DateOfBirth { get; set; }
 
+        [Required]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Personal number must be exactly 11 digits.")]
+        public string PersonalNumber { get; set; }
+                
         public string Image { get; set; }
 
         public int cityId { get; set; }

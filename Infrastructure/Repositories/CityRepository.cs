@@ -1,39 +1,65 @@
 ﻿using Application.DTO_s.City;
 using Application.Interfaces;
+using AutoMapper;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class CityRepository : ICityInterface
     {
-        public Task<int> CreateCity(CityDTO name)
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public CityRepository(DataContext context, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _mapper = mapper;
         }
 
-        public Task<City> DeleteCity(int id)
+        public async Task<int> CreateCity(CityDTO name)
         {
-            throw new NotImplementedException();
+           var city = _mapper.Map<City>(name);
+            _context.Cities.Add(city);
+            await _context.SaveChangesAsync();
+            return city.Id;
         }
 
-        public Task<ICollection<City>> GetCities()
+        public async Task<City> DeleteCity(int id)
         {
-            throw new NotImplementedException();
+            var city =await GetCity(id);
+            if (city == null)
+                throw new NullReferenceException("Record Not Found");
+            _context.Cities.Remove(city);
+            await _context.SaveChangesAsync();
+            return city;
+
         }
 
-        public Task<City> GetCity(int id)
+        public async Task<ICollection<City>> GetCities()
         {
-            throw new NotImplementedException();
+           var cities = await _context.Cities.OrderBy(c=>c.Id).ToListAsync();
+            return cities;  
         }
 
-        public Task<int> UpdateCity(UpdateCityDTO city)
+        public async Task<City> GetCity(int id)
         {
-            throw new NotImplementedException();
+            var city = await _context.Cities.SingleOrDefaultAsync(x => x.Id == id);
+            if (city == null)
+                throw new NullReferenceException("Record Not Found");
+            return city;
+        }
+
+        public async Task<int> UpdateCity(UpdateCityDTO updateCityDTO)
+        {
+            var existingCity = await GetCity(updateCityDTO.Id);
+            if(existingCity == null)
+                throw new NullReferenceException("Record Not Found");
+            var city = _mapper.Map<City>(updateCityDTO);
+            _context.Entry(existingCity).CurrentValues.SetValues(city);
+            await _context.SaveChangesAsync();
+            return city.Id;
         }
     }
 }

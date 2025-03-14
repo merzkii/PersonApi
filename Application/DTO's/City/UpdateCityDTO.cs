@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTO_s.City
+﻿namespace Application.DTO_s.City
 {
-    public class UpdateCityDTO : CityDTO
+    public class UpdateCityDTO 
     {
-        public int Id;
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
