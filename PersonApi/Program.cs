@@ -4,6 +4,8 @@ using Infrastructure.ServiceExtension;
 using Infrastructure.Repositories;
 using Application.Interfaces;
 using PersonApi;
+using PersonApi.Middlewares;
+using PersonApi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +23,12 @@ builder.Services.AddScoped<IPersonInterface, PersonRepository>();
 builder.Services.AddScoped<IConnectedPersonInterface, ConnectedPersonRepository>();
 builder.Services.AddScoped<IPhoneInterface, PhoneRepository>();
 builder.Services.AddScoped<ISharedPhoneInterface, SharedPhoneRepository>();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 
-
+builder.Services.AddLocalization();
 
 var app = builder.Build();
 
@@ -32,6 +38,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<LocalizationMiddleware>();
 
 app.UseHttpsRedirection();
 
