@@ -1,40 +1,66 @@
 ﻿using Application.DTO_s;
 using Application.DTO_s.Person;
 using Application.Interfaces;
+using AutoMapper;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class PersonRepository : IPersonInterface
     {
-        public Task<int> CreatePerson(PersonDTO personDTO)
+        private readonly DataContext _context;
+        private readonly IMapper mapper;
+        public PersonRepository(DataContext context, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _context = context;
+            this.mapper = mapper;
+        }
+        public async Task<int> CreatePerson(PersonDTO personDTO)
+        {
+            var person = mapper.Map<Person>(personDTO);
+            _context.Persons.Add(person);
+            await _context.SaveChangesAsync();
+            return person.Id;
         }
 
-        public Task<Person> DeletePerson(int id)
+        public async Task<Person> DeletePerson(int id)
         {
-            throw new NotImplementedException();
+            var person = await GetPerson(id);
+            if (person == null)
+                throw new NullReferenceException("Person not found");
+            _context.Persons.Remove(person);
+            await _context.SaveChangesAsync();
+            return person;
+
         }
 
-        public Task<Person> GetPerson(int id)
+        public async Task<Person> GetPerson(int id)
         {
-            throw new NotImplementedException();
+            var person = await _context.Persons.SingleAsync(p => p.Id == id);
+            if (person == null)
+            {
+                throw new NullReferenceException("Person not found");
+            }
+            return person;
         }
 
-        public Task<ICollection<Person>> GetPersons()
+        public async Task<ICollection<Person>> GetPersons()
         {
-            throw new NotImplementedException();
+            var persons=await _context.Persons.OrderBy(p=>p.Id).ToListAsync();
+            return persons;
         }
 
-        public Task<int> UpdatePerson(UpdatePersonDTO person)
+        public async Task<int> UpdatePerson(UpdatePersonDTO updatePersonDTO)
         {
-            throw new NotImplementedException();
+            var existingPerson = await GetPerson(updatePersonDTO.Id);
+            if (existingPerson == null)
+                throw new NullReferenceException("Person not found");
+           var person= mapper.Map<Person>(updatePersonDTO);
+            _context.Entry(existingPerson).CurrentValues.SetValues(person);
+            await _context.SaveChangesAsync();
+            return person.Id;
         }
     }
 }

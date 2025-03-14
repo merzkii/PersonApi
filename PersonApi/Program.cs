@@ -16,7 +16,7 @@ builder.Services.AddInfrastructureLayer();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c=>c.UseAllOfToExtendReferenceSchemas() // Ensures inherited properties are included
+builder.Services.AddSwaggerGen(c=>c.UseAllOfToExtendReferenceSchemas() 
 );
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICityInterface, CityRepository>();
