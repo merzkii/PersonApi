@@ -1,34 +1,62 @@
 ﻿using Application.DTO_s.Phone;
 using Application.Interfaces;
+using AutoMapper;
 using Core.Models;
+using Infrastructure.Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace PersonApi
 {
     public class SharedPhoneRepository : ISharedPhoneInterface
     {
-        public Task<int> Create2phones(SharedPhoneDTO id)
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+        public SharedPhoneRepository(DataContext context, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _mapper = mapper;
         }
 
-        public Task<SharedPhone> Delete2Persons(int id)
+        public async Task<int> CreateSharedphone(SharedPhoneDTO id)
         {
-            throw new NotImplementedException();
+            var sharedPhone=_mapper.Map<SharedPhone>(id);
+            _context.SharedPhones.Add(sharedPhone);
+            await _context.SaveChangesAsync();
+            return sharedPhone.Id;
         }
 
-        public Task<SharedPhone> GetPhone2Person(int id)
+        public async Task<SharedPhone> DeleteSharedPhone(int id)
         {
-            throw new NotImplementedException();
+            var sharedPhone = await GetSharedPhone(id);
+            if (sharedPhone == null)
+                throw new NullReferenceException("Record Not Found");
+            _context.SharedPhones.Remove(sharedPhone);
+            await _context.SaveChangesAsync();
+            return sharedPhone;
         }
 
-        public Task<ICollection<SharedPhone>> GetPhone2Persons()
+        public async Task<SharedPhone> GetSharedPhone(int id)
         {
-            throw new NotImplementedException();
+            var sharedPhone=await _context.SharedPhones.SingleOrDefaultAsync(s=>s.Id==id);
+            if (sharedPhone == null)
+                throw new NullReferenceException("Record Not Found");
+            return sharedPhone;
         }
 
-        public Task<int> UpdatePhone2Person(UpdateSharedPhoneDTO updateperson2PhonesDTO)
+        public async Task<ICollection<SharedPhone>> GetSharedPhones()
         {
-            throw new NotImplementedException();
+            return await _context.SharedPhones.OrderBy(s=>s.Id).ToListAsync();
+        }
+
+        public async Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateSharedPhonesDTO)
+        {
+            var existingSharedPhone=await GetSharedPhone(updateSharedPhonesDTO.Id);
+            if (existingSharedPhone == null)
+                throw new NullReferenceException("Record Not Found");
+            var sharedPhone = _mapper.Map<SharedPhone>(updateSharedPhonesDTO);
+            _context.Entry(existingSharedPhone).CurrentValues.SetValues(sharedPhone);
+            await _context.SaveChangesAsync();
+            return existingSharedPhone.Id;
         }
     }
 }

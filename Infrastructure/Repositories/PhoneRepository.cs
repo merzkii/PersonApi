@@ -1,39 +1,64 @@
 ﻿using Application.DTO_s.Phone;
 using Application.Interfaces;
+using AutoMapper;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.Layer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class PhoneRepository : IPhoneInterface
     {
-        public Task<int> CreatePhones(PhoneDTO id)
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public PhoneRepository(DataContext context, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _mapper = mapper;
         }
 
-        public Task<Phone> DeletePhone(int id)
+        public async Task<int> CreatePhone(PhoneDTO number)
         {
-            throw new NotImplementedException();
+            var phone= _mapper.Map<Phone>(number);
+            _context.Phones.Add(phone);
+            await _context.SaveChangesAsync();
+            return phone.Id;
         }
 
-        public Task<Phone> GetPhone(int id)
+        public async Task<Phone> DeletePhone(int id)
         {
-            throw new NotImplementedException();
+            var phone= await GetPhone(id);
+            if (phone == null)
+                throw new NullReferenceException("Record Not Found");
+            _context.Phones.Remove(phone);
+            await _context.SaveChangesAsync();
+            return phone;
         }
 
-        public Task<ICollection<Phone>> GetPhones()
+        public async Task<Phone> GetPhone(int id)
         {
-            throw new NotImplementedException();
+            var phone=await _context.Phones.SingleOrDefaultAsync(p=>p.Id==id);
+            if (phone == null)
+                throw new NullReferenceException("Record Not Found");
+            return phone;
         }
 
-        public Task<int> UpdatePhone(UpdatePhoneDTO phone)
+        public async Task<ICollection<Phone>> GetPhones()
         {
-            throw new NotImplementedException();
+            var phones=await _context.Phones.OrderBy(p=>p.Id).ToListAsync();
+            return phones;
+        }
+
+        public async Task<int> UpdatePhone(UpdatePhoneDTO phone)
+        {
+            var existingPhone = await GetPhone(phone.Id);
+            if (existingPhone == null)
+                throw new NullReferenceException("Record Not Found");
+            var newPhone = _mapper.Map<Phone>(phone);
+            _context.Entry(existingPhone).CurrentValues.SetValues(newPhone);
+            await _context.SaveChangesAsync();
+            return existingPhone.Id;
         }
     }
 }

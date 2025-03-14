@@ -5,10 +5,10 @@ namespace Application.Interfaces
 {
     public interface IPhoneInterface
     {
+        Task<int> CreatePhone(PhoneDTO number);
         Task<ICollection<Phone>> GetPhones();
-        Task<int> CreatePhones(PhoneDTO id);
         Task<Phone> GetPhone(int id);
         Task<Phone> DeletePhone(int id);
-        Task<int> UpdatePhone(UpdatePhoneDTO phone);    
+        Task<int> UpdatePhone(UpdatePhoneDTO phone);
     }
 }
