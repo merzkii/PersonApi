@@ -15,8 +15,8 @@ namespace Infrastructure.Configurations
                 .HasMaxLength(50);
 
             builder.Property(p => p.Type)
-                .IsRequired()
-                .HasConversion<string>(); 
+                .IsRequired();
+                
 
            
             builder.HasIndex(p => p.Number).IsUnique(false);

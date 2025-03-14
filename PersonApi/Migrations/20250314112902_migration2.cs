@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PersonApi.Migrations
 {
     /// <inheritdoc />
-    public partial class migration1 : Migration
+    public partial class migration2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace PersonApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace PersonApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -46,7 +46,7 @@ namespace PersonApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     PersonalNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CityId = table.Column<int>(type: "int", nullable: false),
@@ -67,15 +67,15 @@ namespace PersonApi.Migrations
                 name: "ConnectedPersons",
                 columns: table => new
                 {
-                    PersonId = table.Column<int>(type: "int", nullable: false),
-                    ConnectedPersonId = table.Column<int>(type: "int", nullable: false),
-                    ConnectionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConnectionType = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false),
+                    ConnectedPersonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConnectedPersons", x => new { x.PersonId, x.ConnectedPersonId });
+                    table.PrimaryKey("PK_ConnectedPersons", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ConnectedPersons_Persons_ConnectedPersonId",
                         column: x => x.ConnectedPersonId,
@@ -94,14 +94,14 @@ namespace PersonApi.Migrations
                 name: "SharedPhones",
                 columns: table => new
                 {
-                    PhoneId = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhoneId = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SharedPhones", x => new { x.PhoneId, x.PersonId });
+                    table.PrimaryKey("PK_SharedPhones", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SharedPhones_Persons_PersonId",
                         column: x => x.PersonId,
@@ -122,6 +122,11 @@ namespace PersonApi.Migrations
                 column: "ConnectedPersonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConnectedPersons_PersonId",
+                table: "ConnectedPersons",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Persons_CityId",
                 table: "Persons",
                 column: "CityId");
@@ -135,6 +140,11 @@ namespace PersonApi.Migrations
                 name: "IX_SharedPhones_PersonId",
                 table: "SharedPhones",
                 column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SharedPhones_PhoneId",
+                table: "SharedPhones",
+                column: "PhoneId");
         }
 
         /// <inheritdoc />

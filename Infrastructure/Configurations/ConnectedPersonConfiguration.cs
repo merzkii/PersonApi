@@ -8,11 +8,9 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<ConnectedPerson> builder)
         {
-            builder.HasKey(cp => new { cp.PersonId, cp.ConnectedPersonId });
-
             builder.Property(cp => cp.ConnectionType)
-                .IsRequired()
-                .HasConversion<string>();
+                .IsRequired();
+                
 
             builder.HasOne(cp => cp.Person)
                 .WithMany(p => p.RelatedIndividuals)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PersonApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250313173253_migration1")]
-    partial class migration1
+    [Migration("20250314112902_migration2")]
+    partial class migration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,8 @@ namespace PersonApi.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -44,25 +45,26 @@ namespace PersonApi.Migrations
 
             modelBuilder.Entity("Core.Models.ConnectedPerson", b =>
                 {
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConnectedPersonId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConnectionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.HasKey("PersonId", "ConnectedPersonId");
+                    b.Property<int>("ConnectedPersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConnectionType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ConnectedPersonId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("ConnectedPersons");
                 });
@@ -86,9 +88,8 @@ namespace PersonApi.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
@@ -124,9 +125,8 @@ namespace PersonApi.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -137,21 +137,23 @@ namespace PersonApi.Migrations
 
             modelBuilder.Entity("Core.Models.SharedPhone", b =>
                 {
-                    b.Property<int>("PhoneId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.HasKey("PhoneId", "PersonId");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PhoneId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("PersonId");
+
+                    b.HasIndex("PhoneId");
 
                     b.ToTable("SharedPhones");
                 });

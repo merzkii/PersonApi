@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Person> builder)
         {
-            builder.HasKey(p => p.Id);
+            //builder.HasKey(p => p.Id);
 
             builder.Property(p => p.FirstName)
                 .IsRequired()
@@ -19,8 +19,8 @@ namespace Infrastructure.Configurations
                 .HasMaxLength(50);
 
             builder.Property(p => p.Gender)
-               .IsRequired()
-               .HasConversion<string>();
+               .IsRequired();
+               
 
             builder.Property(p => p.PersonalNumber)
                 .IsRequired()

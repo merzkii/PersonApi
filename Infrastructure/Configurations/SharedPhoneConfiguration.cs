@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<SharedPhone> builder)
         {
-            builder.HasKey(sp => new { sp.PhoneId, sp.PersonId });
+            //builder.HasKey(sp => new { sp.PhoneId, sp.PersonId });
 
             builder.HasOne(sp => sp.Phone)
                    .WithMany(p => p.SharedPhone)

@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<City> builder)
         {
-            builder.Property(x => x.Name).IsRequired();
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
 
             builder.HasMany(x => x.Persons)
                .WithOne(x => x.City)
