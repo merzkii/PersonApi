@@ -55,7 +55,11 @@ namespace Infrastructure.Repositories
 
         public async Task<ICollection<Person>> GetPersons()
         {
-            var persons=await _context.Persons.OrderBy(p=>p.Id).ToListAsync();
+            var persons=await _context.Persons.Include(p => p.City)
+                .Include(p => p.PhoneNumbers)
+                .ThenInclude(sp => sp.Phone)
+                .Include(p => p.RelatedIndividuals)
+                .ThenInclude(cp => cp.RelatedPerson).OrderBy(p=>p.Id).ToListAsync();
             return persons;
         }
 
