@@ -58,7 +58,7 @@ namespace Infrastructure.Repositories
         }
 
 
-       
+
 
 
 
@@ -67,65 +67,16 @@ namespace Infrastructure.Repositories
             var existingPerson = await GetPerson(updatePersonDTO.Id);
             if (existingPerson == null)
                 throw new NullReferenceException("Person not found");
-           var person= mapper.Map<Person>(updatePersonDTO);
+            var person = mapper.Map<Person>(updatePersonDTO);
             _context.Entry(existingPerson).CurrentValues.SetValues(person);
             await _context.SaveChangesAsync();
             return person.Id;
         }
+        
 
-        public async Task<(ICollection<Person>, int)> GetPersonsQuickSearch(string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedList<Person>> GetPersonsByPaging(int pageNumber, int pageSize)
         {
             var query = _context.Persons.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(p => p.FirstName.Contains(searchTerm) ||
-                                         p.LastName.Contains(searchTerm) ||
-                                         p.PersonalNumber.Contains(searchTerm));
-            }
-
-            var totalRecords = await query.CountAsync();
-            var persons = await query.Include(p => p.City)
-                                     .Include(p => p.PhoneNumbers)
-                                     .ThenInclude(sp => sp.Phone)
-                                     .Include(p => p.RelatedIndividuals)
-                                     .ThenInclude(cp => cp.RelatedPerson)
-                                     .OrderBy(p => p.Id)
-                                     .Skip((pageNumber - 1) * pageSize)
-                                     .Take(pageSize)
-                                     .ToListAsync();
-
-            return (persons, totalRecords);
-        }
-
-        public async Task<PagedList<Person>> GetPersonsDetailedSearch( int pageNumber, int pageSize)
-        {
-            var query = _context.Persons.AsQueryable();
-
-            //if (!string.IsNullOrEmpty(searchCriteria.FirstName))
-            //{
-            //    query = query.Where(p => p.FirstName.Contains(searchCriteria.FirstName));
-            //}
-            //if (!string.IsNullOrEmpty(searchCriteria.LastName))
-            //{
-            //    query = query.Where(p => p.LastName.Contains(searchCriteria.LastName));
-            //}
-            //if (!string.IsNullOrEmpty(searchCriteria.PersonalNumber))
-            //{
-            //    query = query.Where(p => p.PersonalNumber.Contains(searchCriteria.PersonalNumber));
-            //}
-            //if (searchCriteria.Gender != null)
-            //{
-            //    query = query.Where(p => p.Gender == searchCriteria.Gender);
-            //}
-            //if (searchCriteria.DateOfBirth != DateTime.MinValue)
-            //{
-            //    query = query.Where(p => p.DateOfBirth == searchCriteria.DateOfBirth);
-            //}
-            //if (searchCriteria.cityId != 0)
-            //{
-            //    query = query.Where(p => p.CityId == searchCriteria.cityId);
-            //}
 
             var totalRecords = await query.CountAsync();
             var persons = await query.Include(p => p.City)
@@ -149,8 +100,24 @@ namespace Infrastructure.Repositories
 
             return count;
         }
-        
-       
+        public async Task<GetPersonDTO> GetPersonsQuickSearch (string firstName, string lastName, string personalNumber)
+        {
+            var person = await _context.Persons
+                .Include(p => p.City)
+                .Include(p => p.PhoneNumbers)
+                .ThenInclude(sp => sp.Phone)
+                .Include(p => p.RelatedIndividuals)
+                .ThenInclude(cp => cp.RelatedPerson)
+                .SingleOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName && p.PersonalNumber == personalNumber);
+
+            if (person == null)
+            {
+                throw new NullReferenceException("Person not found");
+            }
+            return person.CreateDTO();
+        }
+
+
     }
 
 }

@@ -43,11 +43,11 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPersonsQuickSearch(string searchTerm, int pageNumber, int pageSize)
+    public async Task<IActionResult> GetPersonsQuickSearch(string firstName, string lastName, string personalNumber)
     {
         try
         {
-            var persons = await _personInterface.GetPersonsQuickSearch(searchTerm,pageNumber,pageSize);
+            var persons = await _personInterface.GetPersonsQuickSearch(firstName,lastName,personalNumber);
             return Ok(persons);
         }
         catch (Exception ex)
@@ -58,11 +58,11 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPersonsDetailedSearch (int pageNumber, int pageSize)
+    public async Task<IActionResult> GetPersonsByPaging (int pageNumber, int pageSize)
     {
         try
         {
-            var persons = await _personInterface.GetPersonsDetailedSearch(pageNumber,pageSize);
+            var persons = await _personInterface.GetPersonsByPaging(pageNumber,pageSize);
             return Ok(persons);
         }
         catch (Exception ex)
