@@ -1,6 +1,7 @@
 using Application.DTO_s;
 using Application.DTO_s.Person;
 using Application.Interfaces;
+using Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PersonApi.Controllers;
@@ -42,16 +43,46 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPersons()
+    public async Task<IActionResult> GetPersonsQuickSearch(string searchTerm, int pageNumber, int pageSize)
     {
         try
         {
-            var persons = await _personInterface.GetPersons();
+            var persons = await _personInterface.GetPersonsQuickSearch(searchTerm,pageNumber,pageSize);
             return Ok(persons);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetPersons: Internal server error");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPersonsDetailedSearch (int pageNumber, int pageSize)
+    {
+        try
+        {
+            var persons = await _personInterface.GetPersonsDetailedSearch(pageNumber,pageSize);
+            return Ok(persons);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "GetPersons: Internal server error");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetConnectedPersonsCount(int personId, ConnectionType connectionType)
+    {
+        try
+        {
+            var connectedPersonsCount = await _personInterface.GetConnectedPersonsCount(personId, connectionType);
+            return Ok(connectedPersonsCount);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "GetConnectedPersonsCount: Internal server error");
             return StatusCode(500, "Internal server error");
         }
     }

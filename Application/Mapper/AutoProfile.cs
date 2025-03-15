@@ -17,11 +17,13 @@ namespace Application.Mapper
             CreateMap<Phone, PhoneDTO>().ReverseMap();
             CreateMap<SharedPhone, SharedPhoneDTO>().ReverseMap();
 
-            CreateMap<City, UpdateCityDTO>().ReverseMap();
+            CreateMap<City, ExistingCityDTO>().ReverseMap();
             CreateMap<ConnectedPerson, UpdateConnectedPersonDTO>().ReverseMap();
             CreateMap<Person, UpdatePersonDTO>().ReverseMap();
             CreateMap<Phone, UpdatePhoneDTO>().ReverseMap();
             CreateMap<SharedPhone, UpdateSharedPhoneDTO>().ReverseMap();
+
+           
 
         }
     }

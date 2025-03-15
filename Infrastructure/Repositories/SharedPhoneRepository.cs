@@ -37,7 +37,10 @@ namespace PersonApi
 
         public async Task<SharedPhone> GetSharedPhone(int id)
         {
-            var sharedPhone=await _context.SharedPhones.SingleOrDefaultAsync(s=>s.Id==id);
+            var sharedPhone = await _context.SharedPhones
+                .Include(s => s.Phone)
+                .Include(s => s.Person)
+                .SingleOrDefaultAsync(s => s.Id == id);
             if (sharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
             return sharedPhone;

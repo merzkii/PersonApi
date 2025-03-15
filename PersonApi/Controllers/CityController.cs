@@ -85,7 +85,7 @@ namespace PersonApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCity(UpdateCityDTO city)
+        public async Task<IActionResult> UpdateCity(ExistingCityDTO city)
         {
             try
             {

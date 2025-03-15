@@ -8,10 +8,8 @@ namespace Core.Models
     {
         public ConnectionType ConnectionType { get; set; }
         public int PersonId { get; set; }
-        [JsonIgnore]
         public Person? Person { get; set; }
         public int ConnectedPersonId { get; set; }
-        [JsonIgnore]
         public Person? RelatedPerson { get; set; }
     }
 }

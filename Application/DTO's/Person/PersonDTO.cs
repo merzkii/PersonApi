@@ -1,4 +1,5 @@
 ﻿using Application.Attributes;
+using Application.DTO_s.Phone;
 using Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,6 @@ namespace Application.DTO_s
         public int cityId { get; set; }
         
         public string ImagePath { get; set; }
-
+        
     }
 }

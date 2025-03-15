@@ -15,6 +15,5 @@ namespace Core.Models
         public string? ImagePath { get; set; }
         public ICollection<SharedPhone> PhoneNumbers { get; set; } = new List<SharedPhone>();
         public ICollection<ConnectedPerson> RelatedIndividuals { get; set; } = new List<ConnectedPerson>();
-        
     }
 }

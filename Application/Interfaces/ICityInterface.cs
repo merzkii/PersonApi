@@ -5,10 +5,10 @@ namespace Application.Interfaces
 {
     public interface ICityInterface
     {
-        Task<ICollection<City>> GetCities();
-        Task<City> GetCity(int id);
+        Task<ICollection<ExistingCityDTO>> GetCities();
+        Task<ExistingCityDTO> GetCity(int id);
         Task<int> CreateCity(CityDTO name);
-        Task<City> DeleteCity(int id);
-        Task<int> UpdateCity(UpdateCityDTO city);
+        Task<int> DeleteCity(int id);
+        Task<int> UpdateCity(ExistingCityDTO city);
     }
 }
