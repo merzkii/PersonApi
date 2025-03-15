@@ -117,6 +117,28 @@ namespace Infrastructure.Repositories
             return person.CreateDTO();
         }
 
+        public async Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO)
+        {
+            var person = await _context.Persons
+                .Include(p => p.City)
+                .Include(p => p.PhoneNumbers)
+                .ThenInclude(sp => sp.Phone)
+                .Include(p => p.RelatedIndividuals)
+                .ThenInclude(cp => cp.RelatedPerson)
+                .SingleOrDefaultAsync(p => p.FirstName == getPersonDTO.FirstName
+                                           && p.LastName == getPersonDTO.LastName
+                                           && p.PersonalNumber == getPersonDTO.PersonalNumber
+                                           && p.Gender == getPersonDTO.Gender
+                                           && p.DateOfBirth == getPersonDTO.DateOfBirth
+                                           && p.CityId == getPersonDTO.cityId);
+
+            if (person == null)
+            {
+                throw new NullReferenceException("Person not found");
+            }
+            return person.CreateDTO();
+        }
+
 
     }
 

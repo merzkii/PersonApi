@@ -58,6 +58,21 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetPersonByDetailedSearch([FromQuery] GetPersonDTO getPersonDTO)
+    {
+        try
+        {
+            var person = await _personInterface.GetPersonByDetailedSearch(getPersonDTO);
+            return Ok(person);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "GetPersons: Internal server error");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpGet]
     public async Task<IActionResult> GetPersonsByPaging (int pageNumber, int pageSize)
     {
         try

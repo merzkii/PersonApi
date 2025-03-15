@@ -13,6 +13,7 @@ namespace Application.Interfaces
         Task<Person> DeletePerson(int id);
         Task<int> UpdatePerson(UpdatePersonDTO person);
         Task<GetPersonDTO> GetPersonsQuickSearch(string firstName, string lastName,string personalNumber);
+        Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO);
         Task<PagedList<Person>> GetPersonsByPaging( int pageNumber, int pageSize);
         Task<int> GetConnectedPersonsCount(int personId, ConnectionType connectionType);
 
