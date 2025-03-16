@@ -86,7 +86,7 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<PagedList<Person>> GetPersonsByPaging(int pageNumber, int pageSize)
+        public async Task<PagedList<GetPersonDTO>> GetPersonsByPaging(int pageNumber, int pageSize)
         {
             var query = _context.Persons.AsQueryable();
 
@@ -105,7 +105,7 @@ namespace Infrastructure.Repositories
                 throw new NullReferenceException("Records not found");
             }
 
-            return new PagedList<Person>(persons, totalRecords);
+            return new PagedList<GetPersonDTO>(persons.Select(p => p.CreateDTO()).ToList(), totalRecords);
         }
 
         public async Task<int> GetConnectedPersonsCount(int personId, ConnectionType connectionType)
@@ -135,7 +135,7 @@ namespace Infrastructure.Repositories
             {
                 throw new NullReferenceException("Person not found");
             }
-            return persons.Select(p=>p.CreateDTO()).ToList();
+            return persons.Select(p => p.CreateDTO()).ToList();
         }
 
         //public async Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO)
