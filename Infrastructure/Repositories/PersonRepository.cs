@@ -8,6 +8,8 @@ using AutoMapper;
 using Core.Enums;
 using Core.Models;
 using Infrastructure.Layer;
+using Infrastructure.ServiceExtension;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 
@@ -16,14 +18,21 @@ namespace Infrastructure.Repositories
     public class PersonRepository : IPersonInterface
     {
         private readonly DataContext _context;
+        private readonly IImageService _imageService;
         private readonly IMapper mapper;
-        public PersonRepository(DataContext context, IMapper mapper)
+        public PersonRepository(DataContext context, IMapper mapper, IImageService imageService)
         {
             _context = context;
             this.mapper = mapper;
+            _imageService = imageService;
         }
         public async Task<int> CreatePerson(PersonDTO personDTO)
         {
+            var existingPesron = await _context.Persons.SingleOrDefaultAsync(p => p.PersonalNumber == personDTO.PersonalNumber);
+            if (existingPesron != null)
+            {
+                throw new InvalidOperationException($"Person with personal number {personDTO.PersonalNumber} already exists.");
+            }
             var person = mapper.Map<Person>(personDTO);
             _context.Persons.Add(person);
             await _context.SaveChangesAsync();
@@ -57,11 +66,6 @@ namespace Infrastructure.Repositories
             return person.CreateDTO();
         }
 
-
-
-
-
-
         public async Task<int> UpdatePerson(UpdatePersonDTO updatePersonDTO)
         {
             var existingPerson = await GetPerson(updatePersonDTO.Id);
@@ -72,7 +76,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return person.Id;
         }
-        
+
 
         public async Task<PagedList<Person>> GetPersonsByPaging(int pageNumber, int pageSize)
         {
@@ -100,7 +104,7 @@ namespace Infrastructure.Repositories
 
             return count;
         }
-        public async Task<GetPersonDTO> GetPersonsQuickSearch (string firstName, string lastName, string personalNumber)
+        public async Task<GetPersonDTO> GetPersonsQuickSearch(string firstName, string lastName, string personalNumber)
         {
             var person = await _context.Persons
                 .Include(p => p.City)
@@ -137,6 +141,19 @@ namespace Infrastructure.Repositories
                 throw new NullReferenceException("Person not found");
             }
             return person.CreateDTO();
+        }
+
+        public async Task<string?> UploadPersonImage(int personId, IFormFile imageFile)
+        {
+            var person = await _context.Persons.FindAsync(personId);
+            if (person == null)
+                throw new NullReferenceException("Person not found");
+
+            string imagePath = await _imageService.SaveImageAsync(imageFile);
+            person.ImagePath = imagePath;
+
+            await _context.SaveChangesAsync();
+            return imagePath;
         }
 
 

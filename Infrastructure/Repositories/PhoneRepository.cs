@@ -20,7 +20,12 @@ namespace Infrastructure.Repositories
 
         public async Task<int> CreatePhone(PhoneDTO number)
         {
-            var phone= _mapper.Map<Phone>(number);
+            var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number);
+            if (existingPhone != null)
+            {
+                throw new InvalidOperationException($"Phone with number {number.Number} already exists.");
+            }
+            var phone = _mapper.Map<Phone>(number);
             _context.Phones.Add(phone);
             await _context.SaveChangesAsync();
             return phone.Id;
@@ -28,7 +33,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Phone> DeletePhone(int id)
         {
-            var phone= await GetPhone(id);
+            var phone = await GetPhone(id);
             if (phone == null)
                 throw new NullReferenceException("Record Not Found");
             _context.Phones.Remove(phone);
@@ -38,7 +43,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Phone> GetPhone(int id)
         {
-            var phone=await _context.Phones.SingleOrDefaultAsync(p=>p.Id==id);
+            var phone = await _context.Phones.SingleOrDefaultAsync(p => p.Id == id);
             if (phone == null)
                 throw new NullReferenceException("Record Not Found");
             return phone;
@@ -46,7 +51,7 @@ namespace Infrastructure.Repositories
 
         public async Task<ICollection<Phone>> GetPhones()
         {
-            var phones=await _context.Phones.OrderBy(p=>p.Id).ToListAsync();
+            var phones = await _context.Phones.OrderBy(p => p.Id).ToListAsync();
             return phones;
         }
 
@@ -55,6 +60,11 @@ namespace Infrastructure.Repositories
             var existingPhone = await GetPhone(phone.Id);
             if (existingPhone == null)
                 throw new NullReferenceException("Record Not Found");
+            var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number);
+            if (phoneWithSameNumber != null && phoneWithSameNumber.Id != phone.Id)
+            {
+                throw new InvalidOperationException($"Phone with number {phone.Number} already exists.");
+            }
             var newPhone = _mapper.Map<Phone>(phone);
             _context.Entry(existingPhone).CurrentValues.SetValues(newPhone);
             await _context.SaveChangesAsync();

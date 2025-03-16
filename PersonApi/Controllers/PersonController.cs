@@ -30,95 +30,54 @@ public class PersonController : ControllerBase
             return BadRequest();
         }
 
-        try
-        {
-            var person = await _personInterface.CreatePerson(personDTO);
-            return Ok(person);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "CreatePerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var person = await _personInterface.CreatePerson(personDTO);
+        return Ok(person);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadPersonImage(int personId, IFormFile imageFile)
+    {
+        var person = await _personInterface.UploadPersonImage(personId, imageFile);
+        return Ok(person);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetPersonsQuickSearch(string firstName, string lastName, string personalNumber)
     {
-        try
-        {
-            var persons = await _personInterface.GetPersonsQuickSearch(firstName,lastName,personalNumber);
-            return Ok(persons);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetPersons: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var persons = await _personInterface.GetPersonsQuickSearch(firstName, lastName, personalNumber);
+        return Ok(persons);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetPersonByDetailedSearch([FromQuery] GetPersonDTO getPersonDTO)
     {
-        try
-        {
-            var person = await _personInterface.GetPersonByDetailedSearch(getPersonDTO);
-            return Ok(person);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetPersons: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var person = await _personInterface.GetPersonByDetailedSearch(getPersonDTO);
+        return Ok(person);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPersonsByPaging (int pageNumber, int pageSize)
+    public async Task<IActionResult> GetPersonsByPaging(int pageNumber, int pageSize)
     {
-        try
-        {
-            var persons = await _personInterface.GetPersonsByPaging(pageNumber,pageSize);
-            return Ok(persons);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetPersons: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var persons = await _personInterface.GetPersonsByPaging(pageNumber, pageSize);
+        return Ok(persons);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetConnectedPersonsCount(int personId, ConnectionType connectionType)
     {
-        try
-        {
-            var connectedPersonsCount = await _personInterface.GetConnectedPersonsCount(personId, connectionType);
-            return Ok(connectedPersonsCount);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetConnectedPersonsCount: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var connectedPersonsCount = await _personInterface.GetConnectedPersonsCount(personId, connectionType);
+        return Ok(connectedPersonsCount);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetPerson(int id)
     {
-        try
+        var person = await _personInterface.GetPerson(id);
+        if (person == null)
         {
-            var person = await _personInterface.GetPerson(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
-            return Ok(person);
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetPerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        return Ok(person);
     }
 
     [HttpPut]
@@ -129,35 +88,19 @@ public class PersonController : ControllerBase
             return BadRequest();
         }
 
-        try
-        {
-            var updatedPerson = await _personInterface.UpdatePerson(updatePersonDTO);
-            return Ok(updatedPerson);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "UpdatePerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var updatedPerson = await _personInterface.UpdatePerson(updatePersonDTO);
+        return Ok(updatedPerson);
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeletePerson(int id)
     {
-        try
+        var person = await _personInterface.DeletePerson(id);
+        if (person == null)
         {
-            var person = await _personInterface.DeletePerson(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
-            return Ok(person);
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "DeletePerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        return Ok(person);
     }
     #endregion
 
@@ -170,50 +113,26 @@ public class PersonController : ControllerBase
             return BadRequest();
         }
 
-        try
-        {
-            var connectedPerson = await _connectedPersonInterface.CreateConnectedPersons(connectedPersonDTO);
-            return Ok(connectedPerson);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "CreateConnectedPerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var connectedPerson = await _connectedPersonInterface.CreateConnectedPersons(connectedPersonDTO);
+        return Ok(connectedPerson);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetConnectedPersons()
     {
-        try
-        {
-            var connectedPersons = await _connectedPersonInterface.GetConnectedPersons();
-            return Ok(connectedPersons);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetConnectedPersons: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var connectedPersons = await _connectedPersonInterface.GetConnectedPersons();
+        return Ok(connectedPersons);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetConnectedPerson(int id)
     {
-        try
+        var connectedPerson = await _connectedPersonInterface.GetConnectedPerson(id);
+        if (connectedPerson == null)
         {
-            var connectedPerson = await _connectedPersonInterface.GetConnectedPerson(id);
-            if (connectedPerson == null)
-            {
-                return NotFound();
-            }
-            return Ok(connectedPerson);
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetConnectedPerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        return Ok(connectedPerson);
     }
 
     [HttpPut]
@@ -224,35 +143,19 @@ public class PersonController : ControllerBase
             return BadRequest();
         }
 
-        try
-        {
-            var updatedConnectedPerson = await _connectedPersonInterface.UpdateConnectedPerson(updateConnectedPersonDTO);
-            return Ok(updatedConnectedPerson);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "UpdateConnectedPerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        var updatedConnectedPerson = await _connectedPersonInterface.UpdateConnectedPerson(updateConnectedPersonDTO);
+        return Ok(updatedConnectedPerson);
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeleteConnectedPerson(int id)
     {
-        try
+        var connectedPerson = await _connectedPersonInterface.DeleteConnectedPerson(id);
+        if (connectedPerson == null)
         {
-            var connectedPerson = await _connectedPersonInterface.DeleteConnectedPerson(id);
-            if (connectedPerson == null)
-            {
-                return NotFound();
-            }
-            return Ok(connectedPerson);
+            return NotFound();
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "DeleteConnectedPerson: Internal server error");
-            return StatusCode(500, "Internal server error");
-        }
+        return Ok(connectedPerson);
     }
     #endregion
 }

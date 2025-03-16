@@ -9,8 +9,8 @@ using PersonApi.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<DataContext>(options =>
+//        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Add services to the container.
 builder.Services.AddInfrastructureLayer();
 builder.Services.AddControllers();
@@ -24,6 +24,7 @@ builder.Services.AddScoped<IPersonInterface, PersonRepository>();
 builder.Services.AddScoped<IConnectedPersonInterface, ConnectedPersonRepository>();
 builder.Services.AddScoped<IPhoneInterface, PhoneRepository>();
 builder.Services.AddScoped<ISharedPhoneInterface, SharedPhoneRepository>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();

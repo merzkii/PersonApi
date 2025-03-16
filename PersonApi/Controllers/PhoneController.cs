@@ -35,58 +35,34 @@ namespace PersonApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
+            var newPhone = await _phoneInterface.CreatePhone(phone);
+            if (newPhone == 0)
             {
-                var newPhone = await _phoneInterface.CreatePhone(phone);
-                if (newPhone == 0)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Error creating phone");
-                }
-                return Ok("Phone Has Been Created");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating phone");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while creating phone");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("Phone Has Been Created");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPhones()
         {
-            try
+            var phones = await _phoneInterface.GetPhones();
+            if (phones == null || !phones.Any())
             {
-                var phones = await _phoneInterface.GetPhones();
-                if (phones == null || !phones.Any())
-                {
-                    return NotFound("No phones found");
-                }
-                return Ok(phones);
+                return NotFound("No phones found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while retrieving phones");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok(phones);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPhoneById(int id)
         {
-            try
+            var phone = await _phoneInterface.GetPhone(id);
+            if (phone == null)
             {
-                var phone = await _phoneInterface.GetPhone(id);
-                if (phone == null)
-                {
-                    return NotFound("Phone not found");
-                }
-                return Ok(phone);
+                return NotFound("Phone not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while retrieving phone with id {id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok(phone);
         }
 
         [HttpPut]
@@ -100,39 +76,24 @@ namespace PersonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
+
+            var updateResult = await _phoneInterface.UpdatePhone(phone);
+            if (updateResult == 0)
             {
-                var updateResult = await _phoneInterface.UpdatePhone(phone);
-                if (updateResult == 0)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Error updating phone");
-                }
-                return Ok("Phone Has Been Updated");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating phone");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while updating phone with id {phone.Id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("Phone Has Been Updated");
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeletePhone(int id)
         {
-            try
+            var phone = await _phoneInterface.DeletePhone(id);
+            if (phone == null)
             {
-                var phone = await _phoneInterface.DeletePhone(id);
-                if (phone == null)
-                {
-                    return NotFound("Phone not found");
-                }
-                return Ok("Phone Has Been Deleted");
+                return NotFound("Phone not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while deleting phone with id {id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("Phone Has Been Deleted");
         }
         #endregion
 
@@ -149,58 +110,35 @@ namespace PersonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
+
+            var newSharedPhone = await _sharedPhoneInterface.CreateSharedphone(sharedPhone);
+            if (newSharedPhone == 0)
             {
-                var newSharedPhone = await _sharedPhoneInterface.CreateSharedphone(sharedPhone);
-                if (newSharedPhone == 0)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Error creating shared phone");
-                }
-                return Ok("SharedPhone Has Been Created");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating shared phone");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while creating shared phone");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("SharedPhone Has Been Created");
         }
 
         [HttpGet]
         public async Task<IActionResult> GetSharedPhones()
         {
-            try
+            var sharedPhones = await _sharedPhoneInterface.GetSharedPhones();
+            if (sharedPhones == null || !sharedPhones.Any())
             {
-                var sharedPhones = await _sharedPhoneInterface.GetSharedPhones();
-                if (sharedPhones == null || !sharedPhones.Any())
-                {
-                    return NotFound("No shared phones found");
-                }
-                return Ok(sharedPhones);
+                return NotFound("No shared phones found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while retrieving shared phones");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok(sharedPhones);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetSharedPhoneById(int id)
         {
-            try
+            var sharedPhone = await _sharedPhoneInterface.GetSharedPhone(id);
+            if (sharedPhone == null)
             {
-                var sharedPhone = await _sharedPhoneInterface.GetSharedPhone(id);
-                if (sharedPhone == null)
-                {
-                    return NotFound("SharedPhone not found");
-                }
-                return Ok(sharedPhone);
+                return NotFound("SharedPhone not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while retrieving shared phone with id {id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok(sharedPhone);
         }
 
         [HttpPut]
@@ -214,39 +152,24 @@ namespace PersonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
+
+            var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
+            if (updateResult == 0)
             {
-                var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
-                if (updateResult == 0)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Error updating shared phone");
-                }
-                return Ok("SharedPhone Has Been Updated");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating shared phone");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while updating shared phone with id {sharedPhone.Id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("SharedPhone Has Been Updated");
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSharedPhone(int id)
         {
-            try
+            var sharedPhone = await _sharedPhoneInterface.DeleteSharedPhone(id);
+            if (sharedPhone == null)
             {
-                var sharedPhone = await _sharedPhoneInterface.DeleteSharedPhone(id);
-                if (sharedPhone == null)
-                {
-                    return NotFound("SharedPhone not found");
-                }
-                return Ok("SharedPhone Has Been Deleted");
+                return NotFound("SharedPhone not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred while deleting shared phone with id {id}");
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+            return Ok("SharedPhone Has Been Deleted");
         }
 
         #endregion
