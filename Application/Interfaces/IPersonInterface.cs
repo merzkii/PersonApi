@@ -14,8 +14,8 @@ namespace Application.Interfaces
         Task<GetPersonDTO> GetPerson(int id);
         Task<Person> DeletePerson(int id);
         Task<int> UpdatePerson(UpdatePersonDTO person);
-        Task<GetPersonDTO> GetPersonsQuickSearch(string firstName, string lastName,string personalNumber);
-        Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO);
+        Task<List<GetPersonDTO>> GetPersonsQuickSearch(string firstName, string lastName,string personalNumber);
+        
         Task<PagedList<Person>> GetPersonsByPaging( int pageNumber, int pageSize);
         Task<int> GetConnectedPersonsCount(int personId, ConnectionType connectionType);
 

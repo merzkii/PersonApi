@@ -19,6 +19,8 @@ namespace PersonApi
 
         public async Task<int> CreateSharedphone(SharedPhoneDTO id)
         {
+            if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == id.PhoneId && s.PersonId == id.PersonId))
+                throw new InvalidOperationException($"Shared Phone with PhoneId {id.PhoneId} and PersonId {id.PersonId} already exists.");
             var sharedPhone=_mapper.Map<SharedPhone>(id);
             _context.SharedPhones.Add(sharedPhone);
             await _context.SaveChangesAsync();
@@ -48,6 +50,8 @@ namespace PersonApi
 
         public async Task<ICollection<SharedPhone>> GetSharedPhones()
         {
+            if (!await _context.SharedPhones.AnyAsync())
+                throw new NullReferenceException("Record Not Found");
             return await _context.SharedPhones.OrderBy(s=>s.Id).ToListAsync();
         }
 
@@ -56,6 +60,8 @@ namespace PersonApi
             var existingSharedPhone=await GetSharedPhone(updateSharedPhonesDTO.Id);
             if (existingSharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
+            if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == updateSharedPhonesDTO.PhoneId && s.PersonId == updateSharedPhonesDTO.PersonId))
+                throw new InvalidOperationException($"Shared Phone with PhoneId {updateSharedPhonesDTO.PhoneId} and PersonId {updateSharedPhonesDTO.PersonId} already exists.");
             var sharedPhone = _mapper.Map<SharedPhone>(updateSharedPhonesDTO);
             _context.Entry(existingSharedPhone).CurrentValues.SetValues(sharedPhone);
             await _context.SaveChangesAsync();

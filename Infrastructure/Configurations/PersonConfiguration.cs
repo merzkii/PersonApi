@@ -29,8 +29,8 @@ namespace Infrastructure.Configurations
             builder.Property(p => p.DateOfBirth)
                 .IsRequired();
 
-            builder.Property(p => p.ImagePath)
-                .IsRequired();
+            builder.Property(p => p.ImagePath);
+                
 
 
 

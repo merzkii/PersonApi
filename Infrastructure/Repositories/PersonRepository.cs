@@ -71,6 +71,14 @@ namespace Infrastructure.Repositories
             var existingPerson = await GetPerson(updatePersonDTO.Id);
             if (existingPerson == null)
                 throw new NullReferenceException("Person not found");
+            if (existingPerson.PersonalNumber != updatePersonDTO.PersonalNumber)
+            {
+                var existingPesron = await _context.Persons.SingleOrDefaultAsync(p => p.PersonalNumber == updatePersonDTO.PersonalNumber);
+                if (existingPesron != null)
+                {
+                    throw new InvalidOperationException($"Person with personal number {updatePersonDTO.PersonalNumber} already exists.");
+                }
+            }
             var person = mapper.Map<Person>(updatePersonDTO);
             _context.Entry(existingPerson).CurrentValues.SetValues(person);
             await _context.SaveChangesAsync();
@@ -92,6 +100,10 @@ namespace Infrastructure.Repositories
                                      .Skip((pageNumber - 1) * pageSize)
                                      .Take(pageSize)
                                      .ToListAsync();
+            if (persons == null)
+            {
+                throw new NullReferenceException("Records not found");
+            }
 
             return new PagedList<Person>(persons, totalRecords);
         }
@@ -101,47 +113,52 @@ namespace Infrastructure.Repositories
             var count = await _context.ConnectedPersons
                 .Where(cp => cp.PersonId == personId && cp.ConnectionType == connectionType)
                 .CountAsync();
-
+            if (count == 0)
+            {
+                throw new NullReferenceException("Connections not found");
+            }
             return count;
         }
-        public async Task<GetPersonDTO> GetPersonsQuickSearch(string firstName, string lastName, string personalNumber)
+        public async Task<List<GetPersonDTO>> GetPersonsQuickSearch(string? firstName, string? lastName, string? personalNumber)
         {
-            var person = await _context.Persons
+            var persons = await _context.Persons
                 .Include(p => p.City)
                 .Include(p => p.PhoneNumbers)
                 .ThenInclude(sp => sp.Phone)
                 .Include(p => p.RelatedIndividuals)
                 .ThenInclude(cp => cp.RelatedPerson)
-                .SingleOrDefaultAsync(p => p.FirstName == firstName && p.LastName == lastName && p.PersonalNumber == personalNumber);
+.Where(p => (firstName == null || p.FirstName == firstName)
+&& (lastName == null || p.LastName == lastName)
+&& (personalNumber == null || p.PersonalNumber == personalNumber)).ToListAsync();
 
-            if (person == null)
+            if (persons == null)
             {
                 throw new NullReferenceException("Person not found");
             }
-            return person.CreateDTO();
+            return persons.Select(p=>p.CreateDTO()).ToList();
         }
 
-        public async Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO)
-        {
-            var person = await _context.Persons
-                .Include(p => p.City)
-                .Include(p => p.PhoneNumbers)
-                .ThenInclude(sp => sp.Phone)
-                .Include(p => p.RelatedIndividuals)
-                .ThenInclude(cp => cp.RelatedPerson)
-                .SingleOrDefaultAsync(p => p.FirstName == getPersonDTO.FirstName
-                                           && p.LastName == getPersonDTO.LastName
-                                           && p.PersonalNumber == getPersonDTO.PersonalNumber
-                                           && p.Gender == getPersonDTO.Gender
-                                           && p.DateOfBirth == getPersonDTO.DateOfBirth
-                                           && p.CityId == getPersonDTO.cityId);
+        //public async Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO)
+        //{
+        //    var person = await _context.Persons
+        //        .Include(p => p.City)
+        //        .Include(p => p.PhoneNumbers)
+        //        .ThenInclude(sp => sp.Phone)
+        //        .Include(p => p.RelatedIndividuals)
+        //        .ThenInclude(cp => cp.RelatedPerson)
+        //        .SingleOrDefaultAsync(p => p.FirstName == getPersonDTO.FirstName
+        //                                   && p.LastName == getPersonDTO.LastName
+        //                                   && p.PersonalNumber == getPersonDTO.PersonalNumber
+        //                                   && p.Gender == getPersonDTO.Gender
+        //                                   && p.DateOfBirth == getPersonDTO.DateOfBirth
+        //                                   && p.CityId == getPersonDTO.cityId);
 
-            if (person == null)
-            {
-                throw new NullReferenceException("Person not found");
-            }
-            return person.CreateDTO();
-        }
+        //    if (person == null)
+        //    {
+        //        throw new NullReferenceException("Person not found");
+        //    }
+        //    return person.CreateDTO();
+        //}
 
         public async Task<string?> UploadPersonImage(int personId, IFormFile imageFile)
         {

@@ -9,5 +9,7 @@ namespace Application.DTO_s.Person
         public List<PhoneDTO> PhoneNumbers { get; set; }
         [JsonPropertyOrder(9)]
         public List<ConnectedPersonDTO> RelatedIndividuals { get; set; }
+        [JsonPropertyOrder(10)]
+        public string ImagePath { get; set; }
     }
 }

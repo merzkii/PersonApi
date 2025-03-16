@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
 
         public async Task<int> CreateCity(CityDTO cityDTO)
         {
-            var existingCity = await _context.Cities.SingleOrDefaultAsync(c => c.Name == cityDTO.Name);
+            var existingCity = await _context.Cities.SingleOrDefaultAsync(c => c.Name.ToLower() == cityDTO.Name.ToLower());
             if (existingCity != null)
             {
                 throw new InvalidOperationException($"City with name {cityDTO.Name} already exists.");
@@ -46,6 +46,8 @@ namespace Infrastructure.Repositories
         public async Task<ICollection<ExistingCityDTO>> GetCities()
         {
             var cities = await _context.Cities.OrderBy(c => c.Id).ToListAsync();
+            if (cities == null)
+                throw new NullReferenceException("Cities Not Found");
             return cities.Select(c => new ExistingCityDTO
             {
                 Id = c.Id,
@@ -71,7 +73,7 @@ namespace Infrastructure.Repositories
             if (existingCity == null)
                 throw new NullReferenceException("Record Not Found");
 
-            var cityWithSameName = await _context.Cities.SingleOrDefaultAsync(c => c.Name == updateCityDTO.Name && c.Id != updateCityDTO.Id);
+            var cityWithSameName = await _context.Cities.SingleOrDefaultAsync(c => c.Name.ToLower() == updateCityDTO.Name.ToLower());
             if (cityWithSameName != null)
                 throw new InvalidOperationException($"City with name {updateCityDTO.Name} already exists.");
 

@@ -36,8 +36,10 @@ namespace Application.DTO_s
         public DateTime DateOfBirth { get; set; }
 
         public int cityId { get; set; }
-        
-        public string ImagePath { get; set; }
-        
+
+        //public string ImagePath { get; set; }
+
+
+
     }
 }

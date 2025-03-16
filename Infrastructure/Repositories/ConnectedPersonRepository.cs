@@ -33,7 +33,9 @@ namespace Application.Interfaces
         public async Task<ConnectedPerson> DeleteConnectedPerson(int id)
         {
             var connectedPerson=await GetConnectedPerson(id);
-             _context.ConnectedPersons.Remove(connectedPerson);
+            if (connectedPerson == null)
+                throw new InvalidOperationException("Connected Person Not Found");
+            _context.ConnectedPersons.Remove(connectedPerson);
             await _context.SaveChangesAsync();
             return connectedPerson;
 
@@ -49,6 +51,8 @@ namespace Application.Interfaces
 
         public async Task<ICollection<ConnectedPerson>> GetConnectedPersons()
         {
+            if (!_context.ConnectedPersons.Any())
+                throw new InvalidOperationException("Connected Persons Not Found");
             return await _context.ConnectedPersons.OrderBy(c => c.Id).ToListAsync(); 
         }
 
@@ -57,6 +61,11 @@ namespace Application.Interfaces
             var existingconnect = await GetConnectedPerson(updateConnectedPersonDTO.Id);
             if (existingconnect == null)
                 throw new InvalidOperationException("Connected Person Not Found");
+            if (_context.ConnectedPersons.Any(x =>
+             x.ConnectedPersonId == updateConnectedPersonDTO.ConnectedPersonId
+             && x.PersonId == updateConnectedPersonDTO.PersonId
+             && x.ConnectionType == updateConnectedPersonDTO.ConnectionType))
+                throw new InvalidOperationException("Connection Already Exists");
             var connectedperson = _mapper.Map<ConnectedPerson>(updateConnectedPersonDTO);
             _context.Entry(existingconnect).CurrentValues.SetValues(connectedperson);
             await _context.SaveChangesAsync();

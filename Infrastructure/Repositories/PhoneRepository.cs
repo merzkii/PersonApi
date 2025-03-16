@@ -52,6 +52,8 @@ namespace Infrastructure.Repositories
         public async Task<ICollection<Phone>> GetPhones()
         {
             var phones = await _context.Phones.OrderBy(p => p.Id).ToListAsync();
+            if (phones == null)
+                throw new NullReferenceException("Record Not Found");
             return phones;
         }
 

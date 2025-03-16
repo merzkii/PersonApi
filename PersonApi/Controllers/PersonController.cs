@@ -37,18 +37,18 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPersonsQuickSearch(string firstName, string lastName, string personalNumber)
+    public async Task<IActionResult> GetPersonsQuickSearch(string? firstName, string? lastName, string? personalNumber)
     {
         var persons = await _personInterface.GetPersonsQuickSearch(firstName, lastName, personalNumber);
         return Ok(persons);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetPersonByDetailedSearch([FromQuery] GetPersonDTO getPersonDTO)
-    {
-        var person = await _personInterface.GetPersonByDetailedSearch(getPersonDTO);
-        return Ok(person);
-    }
+    //[HttpGet]
+    //public async Task<IActionResult> GetPersonByDetailedSearch([FromQuery] GetPersonDTO getPersonDTO)
+    //{
+    //    var person = await _personInterface.GetPersonByDetailedSearch(getPersonDTO);
+    //    return Ok(person);
+    //}
 
     [HttpGet]
     public async Task<IActionResult> GetPersonsByPaging(int pageNumber, int pageSize)
