@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Person.Application.csproj" />
-    <ProjectReference Include="..\Core\Person.Core.csproj" />
+    <ProjectReference Include="..\Application\PersonAPI.Application.csproj" />
+    <ProjectReference Include="..\Core\PersonAPI.Core.csproj" />
   </ItemGroup>
 
 </Project>
