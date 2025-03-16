@@ -1,12 +1,6 @@
-﻿using Application.DTO_s;
-using Application.DTO_s.Person;
+﻿using Application.DTO_s.Person;
 using Application.DTO_s.Phone;
 using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Extensions
 {
@@ -35,10 +29,6 @@ namespace Application.Extensions
                     PersonId = p.PersonId,
                     ConnectedPersonId = p.ConnectedPersonId,
                 }).ToList(),
-
-
-
-
             };
         }
     }
