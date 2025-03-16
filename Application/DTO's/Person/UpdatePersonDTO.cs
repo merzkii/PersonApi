@@ -38,7 +38,7 @@ namespace Application.DTO_s.Person
 
         public int cityId { get; set; }
 
-        public string ImagePath { get; set; }
+       
 
     }
 }

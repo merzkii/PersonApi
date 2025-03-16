@@ -89,7 +89,6 @@ namespace PersonApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -166,7 +165,7 @@ namespace PersonApi.Migrations
                     b.HasOne("Core.Models.Person", "Person")
                         .WithMany("RelatedIndividuals")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");
@@ -190,13 +189,13 @@ namespace PersonApi.Migrations
                     b.HasOne("Core.Models.Person", "Person")
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Core.Models.Phone", "Phone")
                         .WithMany("SharedPhone")
                         .HasForeignKey("PhoneId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PersonApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250314112902_migration2")]
-    partial class migration2
+    [Migration("20250316170148_anothermigration")]
+    partial class anothermigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,7 +92,6 @@ namespace PersonApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -169,7 +168,7 @@ namespace PersonApi.Migrations
                     b.HasOne("Core.Models.Person", "Person")
                         .WithMany("RelatedIndividuals")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");
@@ -193,13 +192,13 @@ namespace PersonApi.Migrations
                     b.HasOne("Core.Models.Person", "Person")
                         .WithMany("PhoneNumbers")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Core.Models.Phone", "Phone")
                         .WithMany("SharedPhone")
                         .HasForeignKey("PhoneId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");

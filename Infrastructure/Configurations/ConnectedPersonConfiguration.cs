@@ -15,7 +15,7 @@ namespace Infrastructure.Configurations
             builder.HasOne(cp => cp.Person)
                 .WithMany(p => p.RelatedIndividuals)
                 .HasForeignKey(cp => cp.PersonId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(cp => cp.RelatedPerson)
                 .WithMany()

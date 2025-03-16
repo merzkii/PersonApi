@@ -39,14 +39,21 @@ namespace Infrastructure.Repositories
             return person.Id;
         }
 
-        public async Task<Person> DeletePerson(int id)
+        public async Task<int> DeletePerson(int id)
         {
-            var person = await _context.Persons.FindAsync(id);
-            if (person == null)
-                throw new NullReferenceException($"Person not found On {id}-Id");
-            _context.Persons.Remove(person);
-            await _context.SaveChangesAsync();
-            return person;
+            try
+            {
+                var person = await _context.Persons.FindAsync(id);
+                if (person == null)
+                    throw new NullReferenceException($"Person not found On {id}-Id");
+                _context.Persons.Remove(person);
+                await _context.SaveChangesAsync();
+                return person.Id;
+            }
+            catch
+            {
+                throw new InvalidOperationException("Person can not be deleted because it is connected to other records.");
+            }
         }
 
         public async Task<GetPersonDTO> GetPerson(int id)
@@ -68,7 +75,7 @@ namespace Infrastructure.Repositories
 
         public async Task<int> UpdatePerson(UpdatePersonDTO updatePersonDTO)
         {
-            var existingPerson = await GetPerson(updatePersonDTO.Id);
+            var existingPerson = await _context.Persons.FindAsync(updatePersonDTO.Id);
             if (existingPerson == null)
                 throw new NullReferenceException("Person not found");
             if (existingPerson.PersonalNumber != updatePersonDTO.PersonalNumber)
