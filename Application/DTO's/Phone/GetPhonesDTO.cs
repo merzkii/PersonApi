@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Application.DTO_s.Phone
 {
-    public class GetPhonesDTO:PhoneDTO
+    public class GetPhonesDTO : PhoneDTO
     {
-        public PersonDTO Person { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.DTO_s.Phone;
+using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
 using Core.Models;
@@ -31,35 +32,38 @@ namespace Infrastructure.Repositories
             return phone.Id;
         }
 
-        public async Task<Phone> DeletePhone(int id)
+        public async Task<int> DeletePhone(int id)
         {
-            var phone = await GetPhone(id);
+            var phone = await _context.Phones.FindAsync(id);
             if (phone == null)
                 throw new NullReferenceException("Record Not Found");
             _context.Phones.Remove(phone);
             await _context.SaveChangesAsync();
-            return phone;
+            return phone.Id;
         }
 
-        public async Task<Phone> GetPhone(int id)
+        public async Task<PhoneDTO> GetPhone(int id)
         {
             var phone = await _context.Phones.SingleOrDefaultAsync(p => p.Id == id);
+                                             
             if (phone == null)
                 throw new NullReferenceException("Record Not Found");
-            return phone;
+
+
+            return phone.CreateDTO();
         }
 
-        public async Task<ICollection<Phone>> GetPhones()
+        public async Task<List<GetPhonesDTO>> GetPhones()
         {
             var phones = await _context.Phones.OrderBy(p => p.Id).ToListAsync();
             if (phones == null)
                 throw new NullReferenceException("Record Not Found");
-            return phones;
+            return phones.Select(p=>p.CreateDTO()).ToList();
         }
 
         public async Task<int> UpdatePhone(UpdatePhoneDTO phone)
         {
-            var existingPhone = await GetPhone(phone.Id);
+            var existingPhone = await _context.Phones.FindAsync(phone.Id);
             if (existingPhone == null)
                 throw new NullReferenceException("Record Not Found");
             var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number);

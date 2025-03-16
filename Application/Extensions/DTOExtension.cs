@@ -31,5 +31,14 @@ namespace Application.Extensions
                 }).ToList(),
             };
         }
+
+        public static GetPhonesDTO CreateDTO(this Phone phone)
+        {
+            return new GetPhonesDTO
+            {
+                Number = phone.Number,
+                Type = phone.Type
+            };
+        }
     }
 }

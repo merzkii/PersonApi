@@ -23,7 +23,10 @@ namespace Application.Mapper
             CreateMap<Phone, UpdatePhoneDTO>().ReverseMap();
             CreateMap<SharedPhone, UpdateSharedPhoneDTO>().ReverseMap();
 
-           
+            CreateMap<Phone, GetPhonesDTO>().ReverseMap();
+
+
+
 
         }
     }
