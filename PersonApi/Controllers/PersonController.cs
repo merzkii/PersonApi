@@ -25,11 +25,6 @@ public class PersonController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePerson([FromBody] PersonDTO personDTO)
     {
-        if (personDTO == null)
-        {
-            return BadRequest();
-        }
-
         var person = await _personInterface.CreatePerson(personDTO);
         return Ok(person);
     }
@@ -73,21 +68,12 @@ public class PersonController : ControllerBase
     public async Task<IActionResult> GetPerson(int id)
     {
         var person = await _personInterface.GetPerson(id);
-        if (person == null)
-        {
-            return NotFound();
-        }
         return Ok(person);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdatePerson([FromBody] UpdatePersonDTO updatePersonDTO)
     {
-        if (updatePersonDTO == null)
-        {
-            return BadRequest();
-        }
-
         var updatedPerson = await _personInterface.UpdatePerson(updatePersonDTO);
         return Ok(updatedPerson);
     }
@@ -96,10 +82,6 @@ public class PersonController : ControllerBase
     public async Task<IActionResult> DeletePerson(int id)
     {
         var person = await _personInterface.DeletePerson(id);
-        if (person == null)
-        {
-            return NotFound();
-        }
         return Ok(person);
     }
     #endregion
@@ -108,11 +90,6 @@ public class PersonController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateConnectedPerson([FromBody] ConnectedPersonDTO connectedPersonDTO)
     {
-        if (connectedPersonDTO == null)
-        {
-            return BadRequest();
-        }
-
         var connectedPerson = await _connectedPersonInterface.CreateConnectedPersons(connectedPersonDTO);
         return Ok(connectedPerson);
     }
@@ -128,21 +105,12 @@ public class PersonController : ControllerBase
     public async Task<IActionResult> GetConnectedPerson(int id)
     {
         var connectedPerson = await _connectedPersonInterface.GetConnectedPerson(id);
-        if (connectedPerson == null)
-        {
-            return NotFound();
-        }
         return Ok(connectedPerson);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateConnectedPerson([FromBody] UpdateConnectedPersonDTO updateConnectedPersonDTO)
     {
-        if (updateConnectedPersonDTO == null)
-        {
-            return BadRequest();
-        }
-
         var updatedConnectedPerson = await _connectedPersonInterface.UpdateConnectedPerson(updateConnectedPersonDTO);
         return Ok(updatedConnectedPerson);
     }
@@ -151,10 +119,6 @@ public class PersonController : ControllerBase
     public async Task<IActionResult> DeleteConnectedPerson(int id)
     {
         var connectedPerson = await _connectedPersonInterface.DeleteConnectedPerson(id);
-        if (connectedPerson == null)
-        {
-            return NotFound();
-        }
         return Ok(connectedPerson);
     }
     #endregion

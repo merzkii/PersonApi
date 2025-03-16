@@ -31,10 +31,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> GetCityById(int id)
         {
             var city = await _cityInterface.GetCity(id);
-            if (city == null)
-            {
-                return NotFound();
-            }
             return Ok(city);
         }
 
@@ -56,11 +52,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> UpdateCity(ExistingCityDTO city)
         {
             var updateResult = await _cityInterface.UpdateCity(city);
-            if (updateResult == 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating city");
-            }
-
             var updatedCity = await _cityInterface.GetCity(city.Id);
             return Ok(updatedCity);
         }

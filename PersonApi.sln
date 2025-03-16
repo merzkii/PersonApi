@@ -5,11 +5,11 @@ VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonApi", "PersonApi\PersonApi.csproj", "{5EA9C533-4535-40B8-A21B-CCE2CCB6F105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{3E37F675-8A6B-4F2E-ACA5-2E67368C03C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Person.Application", "Application\Person.Application.csproj", "{3E37F675-8A6B-4F2E-ACA5-2E67368C03C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{BE73C8E4-BB7F-4115-BCA9-3204817C7951}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Person.Core", "Core\Person.Core.csproj", "{BE73C8E4-BB7F-4115-BCA9-3204817C7951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1947E49E-3D20-4673-B499-8C9F7395796F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prson.Infrastructure", "Infrastructure\Prson.Infrastructure.csproj", "{1947E49E-3D20-4673-B499-8C9F7395796F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,21 +25,7 @@ namespace PersonApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPhone([FromBody] PhoneDTO phone)
         {
-            if (phone == null)
-            {
-                return BadRequest("Phone data is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var newPhone = await _phoneInterface.CreatePhone(phone);
-            if (newPhone == 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating phone");
-            }
             return Ok("Phone Has Been Created");
         }
 
@@ -47,10 +33,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> GetPhones()
         {
             var phones = await _phoneInterface.GetPhones();
-            if (phones == null || !phones.Any())
-            {
-                return NotFound("No phones found");
-            }
             return Ok(phones);
         }
 
@@ -58,30 +40,13 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> GetPhoneById(int id)
         {
             var phone = await _phoneInterface.GetPhone(id);
-            if (phone == null)
-            {
-                return NotFound("Phone not found");
-            }
             return Ok(phone);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdatePhone(UpdatePhoneDTO phone)
         {
-            if (phone == null)
-            {
-                return BadRequest("Phone data is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var updateResult = await _phoneInterface.UpdatePhone(phone);
-            if (updateResult == 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating phone");
-            }
             return Ok("Phone Has Been Updated");
         }
 
@@ -89,10 +54,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> DeletePhone(int id)
         {
             var phone = await _phoneInterface.DeletePhone(id);
-            if (phone == null)
-            {
-                return NotFound("Phone not found");
-            }
             return Ok("Phone Has Been Deleted");
         }
         #endregion
@@ -102,20 +63,7 @@ namespace PersonApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSharedPhone([FromBody] SharedPhoneDTO sharedPhone)
         {
-            if (sharedPhone == null)
-            {
-                return BadRequest("SharedPhone data is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var newSharedPhone = await _sharedPhoneInterface.CreateSharedphone(sharedPhone);
-            if (newSharedPhone == 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating shared phone");
-            }
             return Ok("SharedPhone Has Been Created");
         }
 
@@ -123,10 +71,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> GetSharedPhones()
         {
             var sharedPhones = await _sharedPhoneInterface.GetSharedPhones();
-            if (sharedPhones == null || !sharedPhones.Any())
-            {
-                return NotFound("No shared phones found");
-            }
             return Ok(sharedPhones);
         }
 
@@ -134,30 +78,13 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> GetSharedPhoneById(int id)
         {
             var sharedPhone = await _sharedPhoneInterface.GetSharedPhone(id);
-            if (sharedPhone == null)
-            {
-                return NotFound("SharedPhone not found");
-            }
             return Ok(sharedPhone);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateSharedPhone(UpdateSharedPhoneDTO sharedPhone)
         {
-            if (sharedPhone == null)
-            {
-                return BadRequest("SharedPhone data is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
-            if (updateResult == 0)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating shared phone");
-            }
             return Ok("SharedPhone Has Been Updated");
         }
 
@@ -165,10 +92,6 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> DeleteSharedPhone(int id)
         {
             var sharedPhone = await _sharedPhoneInterface.DeleteSharedPhone(id);
-            if (sharedPhone == null)
-            {
-                return NotFound("SharedPhone not found");
-            }
             return Ok("SharedPhone Has Been Deleted");
         }
 
