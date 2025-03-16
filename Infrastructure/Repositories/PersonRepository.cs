@@ -1,6 +1,5 @@
 ﻿using Application.DTO_s;
 using Application.DTO_s.Person;
-using Application.DTO_s.Phone;
 using Application.Extensions;
 using Application.Interfaces;
 using Application.Paging;
@@ -8,10 +7,8 @@ using AutoMapper;
 using Core.Enums;
 using Core.Models;
 using Infrastructure.Layer;
-using Infrastructure.ServiceExtension;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 
 namespace Infrastructure.Repositories
 {

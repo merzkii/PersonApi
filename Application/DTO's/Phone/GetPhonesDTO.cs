@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Person.Application.DTO_s.Phone
+namespace Application.DTO_s.Phone
 {
     public class GetPhonesDTO:PhoneDTO
     {
