@@ -26,7 +26,7 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> AddPhone([FromBody] PhoneDTO phone)
         {
             var newPhone = await _phoneInterface.CreatePhone(phone);
-            return Ok("Phone Has Been Created");
+            return Ok(newPhone);
         }
 
         [HttpGet]
@@ -47,14 +47,14 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> UpdatePhone(UpdatePhoneDTO phone)
         {
             var updateResult = await _phoneInterface.UpdatePhone(phone);
-            return Ok("Phone Has Been Updated");
+            return Ok(updateResult);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeletePhone(int id)
         {
             var phone = await _phoneInterface.DeletePhone(id);
-            return Ok("Phone Has Been Deleted");
+            return Ok(phone);
         }
         #endregion
 
@@ -64,7 +64,7 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> AddSharedPhone([FromBody] SharedPhoneDTO sharedPhone)
         {
             var newSharedPhone = await _sharedPhoneInterface.CreateSharedphone(sharedPhone);
-            return Ok("SharedPhone Has Been Created");
+            return Ok(newSharedPhone);
         }
 
         [HttpGet]
@@ -85,14 +85,14 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> UpdateSharedPhone(UpdateSharedPhoneDTO sharedPhone)
         {
             var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
-            return Ok("SharedPhone Has Been Updated");
+            return Ok(updateResult);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSharedPhone(int id)
         {
             var sharedPhone = await _sharedPhoneInterface.DeleteSharedPhone(id);
-            return Ok("SharedPhone Has Been Deleted");
+            return Ok(sharedPhone);
         }
 
         #endregion

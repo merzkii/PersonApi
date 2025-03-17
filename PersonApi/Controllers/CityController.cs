@@ -45,7 +45,7 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> DeleteCity(int id)
         {
             var city = await _cityInterface.DeleteCity(id);
-            return Ok("City Has Been Deleted");
+            return Ok(city);
         }
 
         [HttpPut]
