@@ -38,7 +38,8 @@ namespace Infrastructure.Repositories
             if (city == null)
                 throw new NullReferenceException($"Record Not Found On {id}-id");
             _context.Cities.Remove(city);
-            return await _context.SaveChangesAsync();
+             await _context.SaveChangesAsync();
+            return city.Id;
 
 
         }

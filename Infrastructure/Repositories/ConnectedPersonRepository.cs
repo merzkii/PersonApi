@@ -65,10 +65,11 @@ namespace Application.Interfaces
             if (existingconnect == null)
                 throw new InvalidOperationException("Connected Person Not Found");
             if (_context.ConnectedPersons.Any(x =>
-             x.ConnectedPersonId == updateConnectedPersonDTO.ConnectedPersonId
-             && x.PersonId == updateConnectedPersonDTO.PersonId
-             && x.ConnectionType == updateConnectedPersonDTO.ConnectionType))
+                 (x.ConnectedPersonId == updateConnectedPersonDTO.ConnectedPersonId && x.PersonId == updateConnectedPersonDTO.PersonId && x.ConnectionType == updateConnectedPersonDTO.ConnectionType) ||
+                 (x.ConnectedPersonId == updateConnectedPersonDTO.PersonId && x.PersonId == updateConnectedPersonDTO.ConnectedPersonId && x.ConnectionType == updateConnectedPersonDTO.ConnectionType)))
+            {
                 throw new InvalidOperationException("Connection Already Exists");
+            }
             var connectedperson = _mapper.Map<ConnectedPerson>(updateConnectedPersonDTO);
             _context.Entry(existingconnect).CurrentValues.SetValues(connectedperson);
             await _context.SaveChangesAsync();

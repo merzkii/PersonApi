@@ -38,7 +38,7 @@ namespace PersonApi.Controllers
         public async Task<IActionResult> AddCity([FromBody] CityDTO city)
         {
             var newCity = await _cityInterface.CreateCity(city);
-            return Ok("City Has Been Created");
+            return Ok(newCity);
         }
 
         [HttpDelete]

@@ -67,8 +67,21 @@ namespace Infrastructure.Repositories
             {
                 throw new NullReferenceException("Person not found");
             }
-            
-            return person.CreateDTO();
+
+            var dto = person.CreateDTO();
+
+           
+            dto.RelatedIndividuals = await _context.ConnectedPersons
+                .Where(x => x.PersonId == id || x.ConnectedPersonId == id)
+                .Select(x => new ConnectedPersonDTO
+                {
+                    ConnectionType = x.ConnectionType,
+                    PersonId = x.PersonId == id ? x.PersonId : x.ConnectedPersonId,
+                    ConnectedPersonId = x.PersonId == id ? x.ConnectedPersonId : x.PersonId
+                })
+                .ToListAsync();
+
+            return dto;
         }
 
         public async Task<int> UpdatePerson(UpdatePersonDTO updatePersonDTO)
@@ -110,7 +123,25 @@ namespace Infrastructure.Repositories
                 throw new NullReferenceException("Records not found");
             }
 
-            return new PagedList<GetPersonDTO>(persons.Select(p => p.CreateDTO()).ToList(), totalRecords);
+            var personDTOs = persons.Select(p =>
+            {
+                var dto = p.CreateDTO();
+
+               
+                dto.RelatedIndividuals = _context.ConnectedPersons
+                    .Where(x => x.PersonId == p.Id || x.ConnectedPersonId == p.Id)
+                    .Select(x => new ConnectedPersonDTO
+                    {
+                        ConnectionType = x.ConnectionType,
+                        PersonId = x.PersonId == p.Id ? x.PersonId : x.ConnectedPersonId,
+                        ConnectedPersonId = x.PersonId == p.Id ? x.ConnectedPersonId : x.PersonId
+                    })
+                    .ToList();
+
+                return dto;
+            }).ToList();
+
+            return new PagedList<GetPersonDTO>(personDTOs, totalRecords);
         }
 
         public async Task<int> GetConnectedPersonsCount(int personId, ConnectionType connectionType)
@@ -127,12 +158,14 @@ namespace Infrastructure.Repositories
         public async Task<List<GetPersonDTO>> GetPersonsQuickSearch(string? firstName, string? lastName, string? personalNumber)
         {
             var persons = await _context.Persons
+                .AsNoTracking()
+                .AsSplitQuery()
                 .Include(p => p.City)
                 .Include(p => p.PhoneNumbers)
                 .ThenInclude(sp => sp.Phone)
                 .Include(p => p.RelatedIndividuals)
                 .ThenInclude(cp => cp.RelatedPerson)
-.Where(p => (firstName == null || p.FirstName == firstName)
+                               .Where(p => (firstName == null || p.FirstName == firstName)
 && (lastName == null || p.LastName == lastName)
 && (personalNumber == null || p.PersonalNumber == personalNumber)).ToListAsync();
 
@@ -140,7 +173,22 @@ namespace Infrastructure.Repositories
             {
                 throw new NullReferenceException("Person not found");
             }
-            return persons.Select(p => p.CreateDTO()).ToList();
+            return persons.Select(p =>
+            {
+                var relatedIndividuals = _context.ConnectedPersons
+                    .Where(x => x.PersonId == p.Id || x.ConnectedPersonId == p.Id)
+                    .Select(x => new ConnectedPersonDTO
+                    {
+                        ConnectionType = x.ConnectionType,
+                        PersonId = x.PersonId == p.Id ? x.PersonId : x.ConnectedPersonId,
+                        ConnectedPersonId = x.PersonId == p.Id ? x.ConnectedPersonId : x.PersonId
+                    })
+                    .ToList();
+
+                var dto = p.CreateDTO();
+                dto.RelatedIndividuals = relatedIndividuals;
+                return dto;
+            }).ToList();
         }
 
         //public async Task<GetPersonDTO> GetPersonByDetailedSearch(GetPersonDTO getPersonDTO)

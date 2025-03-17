@@ -2,6 +2,7 @@
 using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
+using Core.Enums;
 using Core.Models;
 using Infrastructure.Layer;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,23 @@ namespace PersonApi
             _mapper = mapper;
         }
 
-        public async Task<int> CreateSharedphone(SharedPhoneDTO id)
+        public async Task<int> CreateSharedphone(SharedPhoneDTO sharedPhoneDTO)
         {
-            if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == id.PhoneId && s.PersonId == id.PersonId))
-                throw new InvalidOperationException($"Shared Phone with PhoneId {id.PhoneId} and PersonId {id.PersonId} already exists.");
-            var sharedPhone=_mapper.Map<SharedPhone>(id);
+            var phone = await _context.Phones.FindAsync(sharedPhoneDTO.PhoneId);
+            if (phone == null)
+                throw new KeyNotFoundException($"Phone with ID {sharedPhoneDTO.PhoneId} does not exist.");
+
+            bool isMobile = phone.Type == PhoneType.Mobile;
+            if (isMobile)
+            {
+                bool mobileAssigned = await _context.SharedPhones.AnyAsync(sp => sp.PhoneId == sharedPhoneDTO.PhoneId && sp.PersonId != sharedPhoneDTO.PersonId);
+                if (mobileAssigned)
+                    throw new InvalidOperationException("This mobile number is already assigned to another person.");
+            }
+
+            if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == sharedPhoneDTO.PhoneId && s.PersonId == sharedPhoneDTO.PersonId))
+                throw new InvalidOperationException($"Shared Phone with PhoneId {sharedPhoneDTO.PhoneId} and PersonId {sharedPhoneDTO.PersonId} already exists.");
+            var sharedPhone = _mapper.Map<SharedPhone>(sharedPhoneDTO);
             _context.SharedPhones.Add(sharedPhone);
             await _context.SaveChangesAsync();
             return sharedPhone.Id;
@@ -53,17 +66,25 @@ namespace PersonApi
         {
             if (!await _context.SharedPhones.AnyAsync())
                 throw new NullReferenceException("Record Not Found");
-            var sharedPhones= await _context.SharedPhones.OrderBy(s=>s.Id).ToListAsync();
+            var sharedPhones = await _context.SharedPhones.OrderBy(s => s.Id).ToListAsync();
             return sharedPhones.Select(s => s.CreateDTO()).ToList();
         }
 
         public async Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateSharedPhonesDTO)
         {
-            var existingSharedPhone=await _context.SharedPhones.FindAsync(updateSharedPhonesDTO.Id);
+            var existingSharedPhone = await _context.SharedPhones.FindAsync(updateSharedPhonesDTO.Id);
             if (existingSharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
-            if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == updateSharedPhonesDTO.PhoneId && s.PersonId == updateSharedPhonesDTO.PersonId))
-                throw new InvalidOperationException($"Shared Phone with PhoneId {updateSharedPhonesDTO.PhoneId} and PersonId {updateSharedPhonesDTO.PersonId} already exists.");
+
+            var phone = await _context.Phones.FindAsync(updateSharedPhonesDTO.PhoneId);
+            if (phone == null)
+                throw new KeyNotFoundException($"Phone with ID {updateSharedPhonesDTO.PhoneId} does not exist.");
+
+            
+            bool connectionExists = await _context.SharedPhones.AnyAsync(sp => sp.PhoneId == updateSharedPhonesDTO.PhoneId && sp.PersonId == updateSharedPhonesDTO.PersonId);
+            if (connectionExists)
+                throw new InvalidOperationException("This connection between PhoneId and PersonId already exists.");
+
             var sharedPhone = _mapper.Map<SharedPhone>(updateSharedPhonesDTO);
             _context.Entry(existingSharedPhone).CurrentValues.SetValues(sharedPhone);
             await _context.SaveChangesAsync();

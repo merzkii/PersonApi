@@ -2,6 +2,7 @@
 using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
+using Core.Enums;
 using Core.Models;
 using Infrastructure.Layer;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,8 @@ namespace Infrastructure.Repositories
 
         public async Task<int> CreatePhone(PhoneDTO number)
         {
-            var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number);
+            var phonetype = number.Type;    
+            var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number&&p.Type==phonetype);
             if (existingPhone != null)
             {
                 throw new InvalidOperationException($"Phone with number {number.Number} already exists.");
@@ -66,7 +68,7 @@ namespace Infrastructure.Repositories
             var existingPhone = await _context.Phones.FindAsync(phone.Id);
             if (existingPhone == null)
                 throw new NullReferenceException("Record Not Found");
-            var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number);
+            var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number && p.Type == phone.Type);
             if (phoneWithSameNumber != null && phoneWithSameNumber.Id != phone.Id)
             {
                 throw new InvalidOperationException($"Phone with number {phone.Number} already exists.");
