@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
         public async Task<int> CreatePhone(PhoneDTO number)
         {
             var phonetype = number.Type;    
-            var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number&&p.Type==phonetype);
+            var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number);
             if (existingPhone != null)
             {
                 throw new InvalidOperationException($"Phone with number {number.Number} already exists.");
