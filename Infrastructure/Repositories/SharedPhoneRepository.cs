@@ -1,4 +1,5 @@
 ﻿using Application.DTO_s.Phone;
+using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
 using Core.Models;
@@ -27,17 +28,17 @@ namespace PersonApi
             return sharedPhone.Id;
         }
 
-        public async Task<SharedPhone> DeleteSharedPhone(int id)
+        public async Task<int> DeleteSharedPhone(int id)
         {
-            var sharedPhone = await GetSharedPhone(id);
+            var sharedPhone = await _context.SharedPhones.FindAsync(id);
             if (sharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
             _context.SharedPhones.Remove(sharedPhone);
             await _context.SaveChangesAsync();
-            return sharedPhone;
+            return sharedPhone.Id;
         }
 
-        public async Task<SharedPhone> GetSharedPhone(int id)
+        public async Task<GetSharedPhonesDTO> GetSharedPhone(int id)
         {
             var sharedPhone = await _context.SharedPhones
                 .Include(s => s.Phone)
@@ -45,19 +46,20 @@ namespace PersonApi
                 .SingleOrDefaultAsync(s => s.Id == id);
             if (sharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
-            return sharedPhone;
+            return sharedPhone.CreateDTO();
         }
 
-        public async Task<ICollection<SharedPhone>> GetSharedPhones()
+        public async Task<List<GetSharedPhonesDTO>> GetSharedPhones()
         {
             if (!await _context.SharedPhones.AnyAsync())
                 throw new NullReferenceException("Record Not Found");
-            return await _context.SharedPhones.OrderBy(s=>s.Id).ToListAsync();
+            var sharedPhones= await _context.SharedPhones.OrderBy(s=>s.Id).ToListAsync();
+            return sharedPhones.Select(s => s.CreateDTO()).ToList();
         }
 
         public async Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateSharedPhonesDTO)
         {
-            var existingSharedPhone=await GetSharedPhone(updateSharedPhonesDTO.Id);
+            var existingSharedPhone=await _context.SharedPhones.FindAsync(updateSharedPhonesDTO.Id);
             if (existingSharedPhone == null)
                 throw new NullReferenceException("Record Not Found");
             if (await _context.SharedPhones.AnyAsync(s => s.PhoneId == updateSharedPhonesDTO.PhoneId && s.PersonId == updateSharedPhonesDTO.PersonId))

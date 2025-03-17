@@ -1,4 +1,5 @@
 ﻿using Application.DTO_s.Person;
+using Application.Extensions;
 using AutoMapper;
 using Core.Models;
 using Infrastructure.Layer;
@@ -19,10 +20,11 @@ namespace Application.Interfaces
         public async Task<int> CreateConnectedPersons(ConnectedPersonDTO connectedPersonDTO)
         {
             if (_context.ConnectedPersons.Any(x =>
-             x.ConnectedPersonId == connectedPersonDTO.ConnectedPersonId
-             && x.PersonId == connectedPersonDTO.PersonId
-             && x.ConnectionType == connectedPersonDTO.ConnectionType))
+                (x.ConnectedPersonId == connectedPersonDTO.ConnectedPersonId && x.PersonId == connectedPersonDTO.PersonId && x.ConnectionType == connectedPersonDTO.ConnectionType) ||
+                (x.ConnectedPersonId == connectedPersonDTO.PersonId && x.PersonId == connectedPersonDTO.ConnectedPersonId && x.ConnectionType == connectedPersonDTO.ConnectionType)))
+            {
                 throw new InvalidOperationException("Connection Already Exists");
+            }
 
             var connectedperson = _mapper.Map<ConnectedPerson>(connectedPersonDTO);
             _context.ConnectedPersons.Add(connectedperson);
@@ -30,35 +32,36 @@ namespace Application.Interfaces
             return connectedperson.Id;
         }
 
-        public async Task<ConnectedPerson> DeleteConnectedPerson(int id)
+        public async Task<int> DeleteConnectedPerson(int id)
         {
-            var connectedPerson=await GetConnectedPerson(id);
+            var connectedPerson=await _context.ConnectedPersons.FindAsync(id);
             if (connectedPerson == null)
                 throw new InvalidOperationException("Connected Person Not Found");
             _context.ConnectedPersons.Remove(connectedPerson);
             await _context.SaveChangesAsync();
-            return connectedPerson;
+            return connectedPerson.Id;
 
         }
 
-        public async Task<ConnectedPerson> GetConnectedPerson(int id)
+        public async Task<GetConnectedPersonsDTO> GetConnectedPerson(int id)
         {
             var connectedPerson = await _context.ConnectedPersons.SingleOrDefaultAsync(c => c.Id == id);
             if (connectedPerson == null)
                 throw new InvalidOperationException("Connected Person Not Found");
-            return connectedPerson;
+            return connectedPerson.CreateDTO();
         }
 
-        public async Task<ICollection<ConnectedPerson>> GetConnectedPersons()
+        public async Task<List<GetConnectedPersonsDTO>> GetConnectedPersons()
         {
             if (!_context.ConnectedPersons.Any())
                 throw new InvalidOperationException("Connected Persons Not Found");
-            return await _context.ConnectedPersons.OrderBy(c => c.Id).ToListAsync(); 
+            var connectedPersons= await _context.ConnectedPersons.OrderBy(c => c.Id).ToListAsync();
+            return connectedPersons.Select(c => c.CreateDTO()).ToList();
         }
 
         public async Task<int> UpdateConnectedPerson(UpdateConnectedPersonDTO updateConnectedPersonDTO)
         {
-            var existingconnect = await GetConnectedPerson(updateConnectedPersonDTO.Id);
+            var existingconnect = await _context.ConnectedPersons.FindAsync(updateConnectedPersonDTO.Id);
             if (existingconnect == null)
                 throw new InvalidOperationException("Connected Person Not Found");
             if (_context.ConnectedPersons.Any(x =>

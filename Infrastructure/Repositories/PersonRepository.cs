@@ -67,6 +67,7 @@ namespace Infrastructure.Repositories
             {
                 throw new NullReferenceException("Person not found");
             }
+            mapper.Map<GetPersonDTO>(person);
             return person.CreateDTO();
         }
 

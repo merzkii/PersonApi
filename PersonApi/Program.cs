@@ -6,6 +6,8 @@ using Application.Interfaces;
 using PersonApi;
 using PersonApi.Middlewares;
 using PersonApi.Filters;
+using AutoMapper;
+using Application.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +31,12 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
 });
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<AutoProfile>();
+});
 
+IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddLocalization();
 
 var app = builder.Build();

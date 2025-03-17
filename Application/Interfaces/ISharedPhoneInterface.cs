@@ -11,9 +11,9 @@ namespace Application.Interfaces
     public interface ISharedPhoneInterface
     {
         Task<int> CreateSharedphone(SharedPhoneDTO id);
-        Task<ICollection<SharedPhone>> GetSharedPhones();
-        Task<SharedPhone> GetSharedPhone(int id);
-        Task<SharedPhone> DeleteSharedPhone(int id);
+        Task<List<GetSharedPhonesDTO>> GetSharedPhones();
+        Task<GetSharedPhonesDTO> GetSharedPhone(int id);
+        Task<int> DeleteSharedPhone(int id);
         Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateperson2PhonesDTO);
     }
 }

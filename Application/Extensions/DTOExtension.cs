@@ -32,12 +32,35 @@ namespace Application.Extensions
             };
         }
 
+
         public static GetPhonesDTO CreateDTO(this Phone phone)
         {
             return new GetPhonesDTO
             {
+                Id = phone.Id,
                 Number = phone.Number,
                 Type = phone.Type
+            };
+        }
+
+        public static GetConnectedPersonsDTO CreateDTO(this ConnectedPerson connectedPerson)
+        {
+            return new GetConnectedPersonsDTO
+            {
+                Id = connectedPerson.Id,
+                ConnectionType = connectedPerson.ConnectionType,
+                PersonId = connectedPerson.PersonId,
+                ConnectedPersonId = connectedPerson.ConnectedPersonId
+            };
+        }
+
+        public static GetSharedPhonesDTO CreateDTO(this SharedPhone sharedPhone)
+        {
+            return new GetSharedPhonesDTO
+            {
+                Id = sharedPhone.Id,
+                PersonId = sharedPhone.PersonId,
+                PhoneId = sharedPhone.PhoneId
             };
         }
     }
