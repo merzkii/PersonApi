@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
 
         public async Task<int> CreatePhone(PhoneDTO number)
         {
-            var phonetype = number.Type;    
+            var phonetype = number.Type;
             var existingPhone = await _context.Phones.SingleOrDefaultAsync(p => p.Number == number.Number);
             if (existingPhone != null)
             {
@@ -47,7 +47,7 @@ namespace Infrastructure.Repositories
         public async Task<PhoneDTO> GetPhone(int id)
         {
             var phone = await _context.Phones.SingleOrDefaultAsync(p => p.Id == id);
-                                             
+
             if (phone == null)
                 throw new NullReferenceException("Record Not Found");
 
@@ -58,9 +58,7 @@ namespace Infrastructure.Repositories
         public async Task<List<GetPhonesDTO>> GetPhones()
         {
             var phones = await _context.Phones.OrderBy(p => p.Id).ToListAsync();
-            if (phones == null)
-                throw new NullReferenceException("Record Not Found");
-            return phones.Select(p=>p.CreateDTO()).ToList();
+            return phones.Select(p => p.CreateDTO()).ToList();
         }
 
         public async Task<int> UpdatePhone(UpdatePhoneDTO phone)
@@ -68,7 +66,7 @@ namespace Infrastructure.Repositories
             var existingPhone = await _context.Phones.FindAsync(phone.Id);
             if (existingPhone == null)
                 throw new NullReferenceException("Record Not Found");
-            var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number && p.Type == phone.Type);
+            var phoneWithSameNumber = await _context.Phones.SingleOrDefaultAsync(p => p.Number == phone.Number);
             if (phoneWithSameNumber != null && phoneWithSameNumber.Id != phone.Id)
             {
                 throw new InvalidOperationException($"Phone with number {phone.Number} already exists.");

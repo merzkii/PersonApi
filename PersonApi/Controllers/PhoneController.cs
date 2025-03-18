@@ -63,7 +63,7 @@ namespace PersonApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSharedPhone([FromBody] SharedPhoneDTO sharedPhone)
         {
-            var newSharedPhone = await _sharedPhoneInterface.CreateSharedphone(sharedPhone);
+            var newSharedPhone = await _sharedPhoneInterface.Attachphone(sharedPhone);
             return Ok(newSharedPhone);
         }
 
@@ -81,12 +81,12 @@ namespace PersonApi.Controllers
             return Ok(sharedPhone);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateSharedPhone(UpdateSharedPhoneDTO sharedPhone)
-        {
-            var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
-            return Ok(updateResult);
-        }
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateSharedPhone(UpdateSharedPhoneDTO sharedPhone)
+        //{
+        //    var updateResult = await _sharedPhoneInterface.UpdateSharedPhone(sharedPhone);
+        //    return Ok(updateResult);
+        //}
 
         [HttpDelete]
         public async Task<IActionResult> DeleteSharedPhone(int id)

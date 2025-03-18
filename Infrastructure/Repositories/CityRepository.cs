@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
             if (city == null)
                 throw new NullReferenceException($"Record Not Found On {id}-id");
             _context.Cities.Remove(city);
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return city.Id;
 
 
@@ -47,8 +47,6 @@ namespace Infrastructure.Repositories
         public async Task<ICollection<ExistingCityDTO>> GetCities()
         {
             var cities = await _context.Cities.OrderBy(c => c.Id).ToListAsync();
-            if (cities == null)
-                throw new NullReferenceException("Cities Not Found");
             return cities.Select(c => new ExistingCityDTO
             {
                 Id = c.Id,

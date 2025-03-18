@@ -88,37 +88,37 @@ public class PersonController : ControllerBase
 
     #region ConnectedPerson
     [HttpPost]
-    public async Task<IActionResult> CreateConnectedPerson([FromBody] ConnectedPersonDTO connectedPersonDTO)
+    public async Task<IActionResult> CreateConnections([FromBody] ConnectedPersonDTO connectedPersonDTO)
     {
-        var connectedPerson = await _connectedPersonInterface.CreateConnectedPersons(connectedPersonDTO);
+        var connectedPerson = await _connectedPersonInterface.CreateConnections(connectedPersonDTO);
         return Ok(connectedPerson);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetConnectedPersons()
+    public async Task<IActionResult> GetConnections()
     {
-        var connectedPersons = await _connectedPersonInterface.GetConnectedPersons();
+        var connectedPersons = await _connectedPersonInterface.GetConnections();
         return Ok(connectedPersons);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetConnectedPerson(int id)
+    public async Task<IActionResult> GetConnection(int id)
     {
-        var connectedPerson = await _connectedPersonInterface.GetConnectedPerson(id);
+        var connectedPerson = await _connectedPersonInterface.GetConnection(id);
         return Ok(connectedPerson);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateConnectedPerson([FromBody] UpdateConnectedPersonDTO updateConnectedPersonDTO)
-    {
-        var updatedConnectedPerson = await _connectedPersonInterface.UpdateConnectedPerson(updateConnectedPersonDTO);
-        return Ok(updatedConnectedPerson);
-    }
+    //[HttpPut]
+    //public async Task<IActionResult> UpdateConnectedPerson([FromBody] UpdateConnectedPersonDTO updateConnectedPersonDTO)
+    //{
+    //    var updatedConnectedPerson = await _connectedPersonInterface.UpdateConnectedPerson(updateConnectedPersonDTO);
+    //    return Ok(updatedConnectedPerson);
+    //}
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteConnectedPerson(int id)
+    public async Task<IActionResult> DeleteConnections(int id)
     {
-        var connectedPerson = await _connectedPersonInterface.DeleteConnectedPerson(id);
+        var connectedPerson = await _connectedPersonInterface.DeleteConnection(id);
         return Ok(connectedPerson);
     }
     #endregion

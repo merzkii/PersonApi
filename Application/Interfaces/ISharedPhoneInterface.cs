@@ -10,10 +10,10 @@ namespace Application.Interfaces
 {
     public interface ISharedPhoneInterface
     {
-        Task<int> CreateSharedphone(SharedPhoneDTO id);
+        Task<int> Attachphone(SharedPhoneDTO id);
         Task<List<GetSharedPhonesDTO>> GetSharedPhones();
         Task<GetSharedPhonesDTO> GetSharedPhone(int id);
         Task<int> DeleteSharedPhone(int id);
-        Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateperson2PhonesDTO);
+        //Task<int> UpdateSharedPhone(UpdateSharedPhoneDTO updateperson2PhonesDTO);
     }
 }

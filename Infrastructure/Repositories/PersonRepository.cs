@@ -38,19 +38,27 @@ namespace Infrastructure.Repositories
 
         public async Task<int> DeletePerson(int id)
         {
-            try
-            {
-                var person = await _context.Persons.FindAsync(id);
-                if (person == null)
-                    throw new NullReferenceException($"Person not found On {id}-Id");
-                _context.Persons.Remove(person);
-                await _context.SaveChangesAsync();
-                return person.Id;
-            }
-            catch
-            {
-                throw new InvalidOperationException("Person can not be deleted because it is connected to other records.");
-            }
+            var person = await _context.Persons
+                .Include(p => p.RelatedIndividuals)
+                .Include(p => p.PhoneNumbers)
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (person == null)
+                throw new NullReferenceException($"Person not found On {id}-Id");
+
+           
+            var deleteConnections = _context.ConnectedPersons
+                .Where(cp => cp.PersonId == id || cp.ConnectedPersonId == id);
+            _context.ConnectedPersons.RemoveRange(deleteConnections);
+
+            
+            var deletePhones = _context.SharedPhones
+                .Where(sp => sp.PersonId == id);
+            _context.SharedPhones.RemoveRange(deletePhones);
+
+            _context.Persons.Remove(person);
+            await _context.SaveChangesAsync();
+            return person.Id;
         }
 
         public async Task<GetPersonDTO> GetPerson(int id)
@@ -147,12 +155,8 @@ namespace Infrastructure.Repositories
         public async Task<int> GetConnectedPersonsCount(int personId, ConnectionType connectionType)
         {
             var count = await _context.ConnectedPersons
-                .Where(cp => cp.PersonId == personId && cp.ConnectionType == connectionType)
+                .Where(cp => (cp.PersonId == personId || cp.ConnectedPersonId == personId) && cp.ConnectionType == connectionType)
                 .CountAsync();
-            if (count == 0)
-            {
-                throw new NullReferenceException("Connections not found");
-            }
             return count;
         }
         public async Task<List<GetPersonDTO>> GetPersonsQuickSearch(string? firstName, string? lastName, string? personalNumber)

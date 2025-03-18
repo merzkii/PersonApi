@@ -5,6 +5,7 @@ namespace Application.DTO_s.Person
 {
     public class GetPersonDTO : PersonDTO
     {
+        public int id { get; set; }
         [JsonPropertyOrder(8)]
         public List<PhoneDTO> PhoneNumbers { get; set; }
         [JsonPropertyOrder(9)]

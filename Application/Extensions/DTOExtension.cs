@@ -10,6 +10,7 @@ namespace Application.Extensions
         {
             return new GetPersonDTO
             {
+                id = person.Id,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 Gender = person.Gender,

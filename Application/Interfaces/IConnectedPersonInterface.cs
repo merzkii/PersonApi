@@ -5,10 +5,10 @@ namespace Application.Interfaces
 {
     public interface IConnectedPersonInterface
     {
-        Task<List<GetConnectedPersonsDTO>> GetConnectedPersons();
-        Task<int> CreateConnectedPersons(ConnectedPersonDTO id);
-        Task<GetConnectedPersonsDTO> GetConnectedPerson(int id);
-        Task<int> DeleteConnectedPerson(int id);
-        Task<int> UpdateConnectedPerson(UpdateConnectedPersonDTO updateconnectedPerson);
+        Task<List<GetConnectedPersonsDTO>> GetConnections();
+        Task<int> CreateConnections(ConnectedPersonDTO id);
+        Task<GetConnectedPersonsDTO> GetConnection(int id);
+        Task<int> DeleteConnection(int id);
+        //Task<int> UpdateConnectedPerson(UpdateConnectedPersonDTO updateconnectedPerson);
     }
 }
