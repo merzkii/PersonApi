@@ -61,7 +61,7 @@ namespace PersonApi.Controllers
         #region SharedPhone
 
         [HttpPost]
-        public async Task<IActionResult> AddSharedPhone([FromBody] SharedPhoneDTO sharedPhone)
+        public async Task<IActionResult> AttachPhone([FromBody] SharedPhoneDTO sharedPhone)
         {
             var newSharedPhone = await _sharedPhoneInterface.Attachphone(sharedPhone);
             return Ok(newSharedPhone);
